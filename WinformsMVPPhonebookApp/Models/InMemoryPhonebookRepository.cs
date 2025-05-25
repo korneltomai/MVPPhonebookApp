@@ -1,11 +1,15 @@
 ﻿
+using System.DirectoryServices;
+
 namespace WinformsMVPPhonebookApp.Models
 {
     public class InMemoryPhonebookRepository : IPhonebookRepository
     {
-        public IEnumerable<PhonebookEntry> GetAllEntries()
+        public List<PhonebookEntry> Entries { get; set; }
+
+        public InMemoryPhonebookRepository()
         {
-            var entries = new List<PhonebookEntry>
+            Entries = new List<PhonebookEntry>
             {
                 new PhonebookEntry { Name = "Mom", PhoneNumber = "+361234567" },
                 new PhonebookEntry { Name = "Dad", PhoneNumber = "+361234568" },
@@ -27,8 +31,11 @@ namespace WinformsMVPPhonebookApp.Models
                 new PhonebookEntry { Name = "Hannah", PhoneNumber = "+365671245" },
                 new PhonebookEntry { Name = "Ivy", PhoneNumber = "+365671246" }
             };
+        }
 
-            return entries;
+        public IEnumerable<PhonebookEntry> GetAllEntries()
+        {
+            return Entries;
         }
     }
 }
