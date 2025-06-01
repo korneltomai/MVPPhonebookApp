@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace WinformsMVPPhonebookApp.Models
+﻿namespace WinformsMVPPhonebookApp.Models
 {
     public class CsvPhonebookRepository : IPhonebookRepository
     {
