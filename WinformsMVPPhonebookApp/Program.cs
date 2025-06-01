@@ -13,7 +13,8 @@ namespace WinformsMVPPhonebookApp
             ApplicationConfiguration.Initialize();
 
             var mainView = new Views.MainForm();
-            var repository = new Models.InMemoryPhonebookRepository();
+            var fileSystem = new Models.RealFileSystem();
+            var repository = new Models.CsvPhonebookRepository(fileSystem, "data.csv");
             var mainPresenter = new Presenters.MainPresenter(mainView, repository);
             
             Application.Run(mainView);
