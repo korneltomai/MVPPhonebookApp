@@ -27,28 +27,40 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             Assert.That(entries[1].PhoneNumber, Is.EqualTo("987654321"));
         }
 
-        [Test]
-        public void GetAllEntries_WhenFileExistsWithMissingValues_ReturnsEntries()
+        [TestCase("", "123456789")]
+        [TestCase("John Doe", "")]
+        [TestCase("", "")]
+        public void GetAllEntries_WhenFileExistsWithMissingValues_ThrowsException(string name, string phoneNumber)
         {
             // Arrange
             var stubFileSystem = new FakeFileSystem
             {
                 DoesFileExists = true,
-                FileContent = ",123456789\nJane Smith,\n,"
+                FileContent = "John Doe,123456789\n" +
+                              $"{name},{phoneNumber}\n" +
+                              "Jane Smith,987654321"
             };
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
-            // Act
-            var entries = repository.GetAllEntries().ToList();
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
+        }
+
+        [Test]
+        public void GetAllEntries_WhenFileExistsWithEmptyLines_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var stubFileSystem = new FakeFileSystem
+            {
+                DoesFileExists = true,
+                FileContent = "John Doe,123456789\n" +
+                              $"\n" +
+                              "Jane Smith,987654321"
+            };
+            var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
             // Assert
-            Assert.That(entries.Count, Is.EqualTo(3));
-            Assert.That(entries[0].Name, Is.EqualTo(""));
-            Assert.That(entries[0].PhoneNumber, Is.EqualTo("123456789"));
-            Assert.That(entries[1].Name, Is.EqualTo("Jane Smith"));
-            Assert.That(entries[1].PhoneNumber, Is.EqualTo(""));
-            Assert.That(entries[2].Name, Is.EqualTo(""));
-            Assert.That(entries[2].PhoneNumber, Is.EqualTo(""));
+            Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
         }
 
         [Test]
@@ -88,8 +100,8 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
         public class FakeFileSystem : IFileSystem
         {
             public bool CreateFileCalled { get; private set; } = false;
-            public bool DoesFileExists { get; set; }
-            public string FileContent { get; set; } = string.Empty;
+            public bool DoesFileExists;
+            public string FileContent = string.Empty;
 
             public bool FileExists(string path) => DoesFileExists;
 
