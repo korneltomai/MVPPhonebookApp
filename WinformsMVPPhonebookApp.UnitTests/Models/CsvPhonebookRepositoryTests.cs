@@ -30,7 +30,7 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
         [TestCase("", "123456789")]
         [TestCase("John Doe", "")]
         [TestCase("", "")]
-        public void GetAllEntries_WhenFileExistsWithMissingValues_ThrowsException(string name, string phoneNumber)
+        public void GetAllEntries_WhenFileExistsWithMissingValues_ThrowsInvalidOperationException(string name, string phoneNumber)
         {
             // Arrange
             var stubFileSystem = new FakeFileSystem
