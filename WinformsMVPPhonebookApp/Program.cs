@@ -15,9 +15,20 @@ namespace WinformsMVPPhonebookApp
             var mainView = new Views.MainForm();
             var fileSystem = new Models.RealFileSystem();
             var repository = new Models.CsvPhonebookRepository(fileSystem, "entries.csv");
-            var mainPresenter = new Presenters.MainPresenter(mainView, repository);
             
-            Application.Run(mainView);
+            try 
+            {
+                var mainPresenter = new Presenters.MainPresenter(mainView, repository);
+            }
+            catch (InvalidOperationException e)
+            {
+                DialogResult result = MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (result == DialogResult.OK)
+                    Application.Exit();
+                else
+                    Application.Run(mainView);
+            }
+            
         }
     }
 }
