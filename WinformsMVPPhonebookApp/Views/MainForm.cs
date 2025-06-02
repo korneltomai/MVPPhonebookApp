@@ -19,8 +19,15 @@ namespace WinformsMVPPhonebookApp.Views
         public MainForm()
         {
             InitializeComponent();
+
             dataGridView.EnableHeadersVisualStyles = false;
             dataGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromKnownColor(System.Drawing.KnownColor.Control);
+        }
+
+        private void DataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            buttonEditPhonenumber.Enabled = SelectedEntry != null;
+            buttonDeletePhonenumber.Enabled = SelectedEntry != null;
         }
     }
 }

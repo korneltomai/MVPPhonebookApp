@@ -66,6 +66,7 @@
             // 
             // buttonDeletePhonenumber
             // 
+            buttonDeletePhonenumber.Enabled = false;
             buttonDeletePhonenumber.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             buttonDeletePhonenumber.Location = new Point(12, 84);
             buttonDeletePhonenumber.Name = "buttonDeletePhonenumber";
@@ -76,6 +77,7 @@
             // 
             // buttonEditPhonenumber
             // 
+            buttonEditPhonenumber.Enabled = false;
             buttonEditPhonenumber.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             buttonEditPhonenumber.Location = new Point(12, 48);
             buttonEditPhonenumber.Name = "buttonEditPhonenumber";
@@ -109,6 +111,7 @@
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(557, 426);
             dataGridView.TabIndex = 0;
+            dataGridView.SelectionChanged += DataGridView_SelectionChanged;
             // 
             // EntryName
             // 

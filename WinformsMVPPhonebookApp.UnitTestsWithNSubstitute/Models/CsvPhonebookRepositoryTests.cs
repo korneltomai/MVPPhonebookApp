@@ -23,11 +23,28 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             var entries = repository.GetAllEntries().ToList();
 
             // Assert
-            Assert.That(entries.Count, Is.EqualTo(2));
+            Assert.That(entries, Has.Count.EqualTo(2));
             Assert.That(entries[0].Name, Is.EqualTo("John Doe"));
             Assert.That(entries[0].PhoneNumber, Is.EqualTo("123456789"));
             Assert.That(entries[1].Name, Is.EqualTo("Jane Smith"));
             Assert.That(entries[1].PhoneNumber, Is.EqualTo("987654321"));
+        }
+
+        [Test]
+        public void GetAllEntries_WhenFileExistsAndIsEmpty_ReturnsEmptyList()
+        {
+            // Arrange
+            var stubFileSystem = Substitute.For<IFileSystem>();
+            stubFileSystem.FileExists(Arg.Any<string>()).Returns(true);
+            stubFileSystem.OpenRead(Arg.Any<string>()).Returns(new MemoryStream());
+
+            var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
+
+            // Act
+            var entries = repository.GetAllEntries().ToList();
+
+            // Assert
+            Assert.That(entries, Is.Empty);
         }
 
         [TestCase("", "123456789")]
@@ -76,7 +93,7 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             var entries = repository.GetAllEntries().ToList();
 
             // Assert
-            Assert.That(entries.Count, Is.EqualTo(0));
+            Assert.That(entries, Is.Empty);
         }
 
         [Test]

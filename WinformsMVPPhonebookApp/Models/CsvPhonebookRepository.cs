@@ -23,14 +23,17 @@
                 List<string> lines = reader.ReadToEnd().Split('\n').ToList();
 
                 if (lines.Count > 1 && lines.Any(l => l.Trim() == string.Empty))
-                    throw new InvalidOperationException("The CSV file contains empty lines.");
+                    throw new InvalidOperationException("The entries file contains empty lines.");
+
+                if (lines.Count == 1 && lines[0].Trim() == string.Empty)
+                    return entries;
 
                 foreach (string line in lines)
                 {
                     string[] values = line.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
                     if (values.Length != 2)
-                        throw new InvalidOperationException("Each line in the CSV file must contain exactly two values.");
+                        throw new InvalidOperationException("Each line in the entries file must contain exactly two values.");
 
                     entries.Add(new PhonebookEntry(values[0], values[1]));
                 }
