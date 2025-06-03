@@ -23,7 +23,7 @@
                 List<string> lines = reader.ReadToEnd().Split("\r\n").ToList();
 
                 if (lines.Count > 1 && lines.Any(l => l.Trim() == string.Empty && l != lines.Last()))
-                    throw new InvalidOperationException("The entries file contains empty lines.");
+                    throw new InvalidOperationException("The entries file must not contain empty lines.");
 
                 foreach (string line in lines)
                 {
@@ -52,6 +52,10 @@
                 throw new FileNotFoundException("The entries file does not exist.");
 
             List<PhonebookEntry> entries = GetAllEntries().ToList();
+
+            if (!entries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber))
+                throw new InvalidOperationException("The entry to delete does not exist.");
+
             entries.RemoveAll(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber);
 
             using var stream = _fileSystem.CreateFile(_filePath);

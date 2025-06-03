@@ -62,7 +62,8 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
+            Exception exception = Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
+            Assert.That(exception.Message, Contains.Substring("Each line in the entries file must contain exactly two values"));
         }
 
         [Test]
@@ -79,11 +80,12 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
+            Exception exception = Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
+            Assert.That(exception.Message, Contains.Substring("The entries file must not contain empty lines"));
         }
 
         [Test]
-        public void GetAllEntries_WhenFileDoesNotExists_ReturnEmptyList()
+        public void GetAllEntries_WhenFileDoesNotExist_ReturnEmptyList()
         {
             // Arrange
             var stubFileSystem = new FakeFileSystem
@@ -100,7 +102,7 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
         }
 
         [Test]
-        public void GetAllEntries_WhenFileDoesNotExists_CreatesFile()
+        public void GetAllEntries_WhenFileDoesNotExist_CreatesFile()
         {
             // Arrange
             var mockFileSystem = new FakeFileSystem
@@ -130,50 +132,84 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
 
             // Act
             repository.DeleteEntry(entryToDelete);
-            var entries = repository.GetAllEntries().ToList();
 
             // Assert
+            var entries = repository.GetAllEntries().ToList();
+
             Assert.That(entries, Has.Count.EqualTo(1));
             Assert.That(entries.Contains(entryToDelete), Is.False);
         }
 
-        public class FakeFileSystem : IFileSystem
+        [Test]
+        public void DeleteEntry_WhenEntryDoesNotExist_ThrowsInvalidOperationException()
         {
-            public bool CreateFileCalled { get; private set; } = false;
-            public bool DoesFileExists;
-            public string FileContent = string.Empty;
-
-            public bool FileExists(string path) => DoesFileExists;
-
-            public Stream OpenRead(string path) => new MemoryStream(System.Text.Encoding.UTF8.GetBytes(FileContent));
-
-            public Stream CreateFile(string path)
+            // Arrange
+            var stubFileSystem = new FakeFileSystem
             {
-                CreateFileCalled = true;
-                return new WriteBackStream(content =>
-                {
-                    FileContent = content;
-                });
-            }
+                DoesFileExists = true,
+                FileContent = "John Doe,123456789\r\nJane Smith,987654321"
+            };
+            var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
+            var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
+
+            // Assert + Act
+            Exception exception = Assert.Throws<InvalidOperationException>(() => repository.DeleteEntry(entryToDelete));
+            Assert.That(exception.Message, Contains.Substring("The entry to delete does not exist"));
         }
 
-        public class WriteBackStream : MemoryStream
+        [Test]
+        public void DeleteEntry_WhenFileDoesNotExist_ThrowsFileNotFoundException()
         {
-            private readonly Action<string> _onDispose;
-
-            public WriteBackStream(Action<string> onDispose) : base()
+            // Arrange
+            var stubFileSystem = new FakeFileSystem
             {
-                _onDispose = onDispose;
-            }
+                DoesFileExists = false,
+            };
+            var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
+            var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
 
-            protected override void Dispose(bool disposing)
+            // Assert + Act
+            Exception exception = Assert.Throws<FileNotFoundException>(() => repository.DeleteEntry(entryToDelete));
+            Assert.That(exception.Message, Contains.Substring("The entries file does not exist"));
+        }
+    }
+
+    public class FakeFileSystem : IFileSystem
+    {
+        public bool CreateFileCalled { get; private set; } = false;
+        public bool DoesFileExists;
+        public string FileContent = string.Empty;
+
+        public bool FileExists(string path) => DoesFileExists;
+
+        public Stream OpenRead(string path) => new MemoryStream(System.Text.Encoding.UTF8.GetBytes(FileContent));
+
+        public Stream CreateFile(string path)
+        {
+            CreateFileCalled = true;
+            return new WriteBackStream(content =>
             {
-                Position = 0;
-                using var reader = new StreamReader(this, leaveOpen: true);
-                var content = reader.ReadToEnd();
-                _onDispose(content);
-                base.Dispose(disposing);
-            }
+                FileContent = content;
+            });
+        }
+    }
+
+    public class WriteBackStream : MemoryStream
+    {
+        private readonly Action<string> _onDispose;
+
+        public WriteBackStream(Action<string> onDispose) : base()
+        {
+            _onDispose = onDispose;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Position = 0;
+            using var reader = new StreamReader(this, leaveOpen: true);
+            var content = reader.ReadToEnd();
+            _onDispose(content);
+            base.Dispose(disposing);
         }
     }
 }
