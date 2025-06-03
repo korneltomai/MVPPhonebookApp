@@ -5,15 +5,17 @@ namespace WinformsMVPPhonebookApp.Views
 {
     public partial class MainForm : Form, IMainView
     {
-        public List<PhonebookEntry> Entries
+        public event EventHandler? DeleteEntryClicked;
+
+        public object Entries
         {
-            get => dataGridView.DataSource as List<PhonebookEntry> ?? [];
+            get => dataGridView.DataSource;
             set => dataGridView.DataSource = value;
         }
 
         public PhonebookEntry? SelectedEntry
         {
-            get => dataGridView.CurrentRow.DataBoundItem as PhonebookEntry;
+            get => dataGridView.CurrentRow?.DataBoundItem as PhonebookEntry;
         }
 
         public MainForm()
@@ -26,8 +28,16 @@ namespace WinformsMVPPhonebookApp.Views
 
         private void DataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            buttonEditPhonenumber.Enabled = SelectedEntry != null;
-            buttonDeletePhonenumber.Enabled = SelectedEntry != null;
+            buttonEditEntry.Enabled = SelectedEntry != null;
+            buttonDeleteEntry.Enabled = SelectedEntry != null;
+        }
+
+        private void ButtonDeleteEntry_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Are you sure you want to delete the selected entry?",
+                "Confirm Delete", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.OK)
+                DeleteEntryClicked?.Invoke(sender, e);
         }
     }
 }

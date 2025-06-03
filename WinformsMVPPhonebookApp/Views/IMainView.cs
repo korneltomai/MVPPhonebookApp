@@ -4,7 +4,9 @@ namespace WinformsMVPPhonebookApp.Views
 {
     public interface IMainView
     {
-        List<PhonebookEntry> Entries { get; set; }
+        event EventHandler DeleteEntryClicked;
+
+        object Entries { get; set; }
         PhonebookEntry? SelectedEntry { get; }
     }
 }

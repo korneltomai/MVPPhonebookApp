@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             splitContainer = new SplitContainer();
-            buttonDeletePhonenumber = new Button();
-            buttonEditPhonenumber = new Button();
-            buttonAddPhonenumber = new Button();
+            buttonDeleteEntry = new Button();
+            buttonEditEntry = new Button();
+            buttonAddEntry = new Button();
             dataGridView = new DataGridView();
             EntryName = new DataGridViewTextBoxColumn();
             EntryPhoneNumber = new DataGridViewTextBoxColumn();
@@ -51,9 +51,9 @@
             // splitContainer.Panel1
             // 
             splitContainer.Panel1.BackColor = SystemColors.Menu;
-            splitContainer.Panel1.Controls.Add(buttonDeletePhonenumber);
-            splitContainer.Panel1.Controls.Add(buttonEditPhonenumber);
-            splitContainer.Panel1.Controls.Add(buttonAddPhonenumber);
+            splitContainer.Panel1.Controls.Add(buttonDeleteEntry);
+            splitContainer.Panel1.Controls.Add(buttonEditEntry);
+            splitContainer.Panel1.Controls.Add(buttonAddEntry);
             // 
             // splitContainer.Panel2
             // 
@@ -64,37 +64,38 @@
             splitContainer.SplitterDistance = 224;
             splitContainer.TabIndex = 0;
             // 
-            // buttonDeletePhonenumber
+            // buttonDeleteEntry
             // 
-            buttonDeletePhonenumber.Enabled = false;
-            buttonDeletePhonenumber.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonDeletePhonenumber.Location = new Point(12, 84);
-            buttonDeletePhonenumber.Name = "buttonDeletePhonenumber";
-            buttonDeletePhonenumber.Size = new Size(209, 30);
-            buttonDeletePhonenumber.TabIndex = 2;
-            buttonDeletePhonenumber.Text = "Delete selected";
-            buttonDeletePhonenumber.UseVisualStyleBackColor = true;
+            buttonDeleteEntry.Enabled = false;
+            buttonDeleteEntry.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonDeleteEntry.Location = new Point(12, 84);
+            buttonDeleteEntry.Name = "buttonDeleteEntry";
+            buttonDeleteEntry.Size = new Size(209, 30);
+            buttonDeleteEntry.TabIndex = 2;
+            buttonDeleteEntry.Text = "Delete selected";
+            buttonDeleteEntry.UseVisualStyleBackColor = true;
+            buttonDeleteEntry.Click += ButtonDeleteEntry_Click;
             // 
-            // buttonEditPhonenumber
+            // buttonEditEntry
             // 
-            buttonEditPhonenumber.Enabled = false;
-            buttonEditPhonenumber.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonEditPhonenumber.Location = new Point(12, 48);
-            buttonEditPhonenumber.Name = "buttonEditPhonenumber";
-            buttonEditPhonenumber.Size = new Size(209, 30);
-            buttonEditPhonenumber.TabIndex = 1;
-            buttonEditPhonenumber.Text = "Edit selected";
-            buttonEditPhonenumber.UseVisualStyleBackColor = true;
+            buttonEditEntry.Enabled = false;
+            buttonEditEntry.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonEditEntry.Location = new Point(12, 48);
+            buttonEditEntry.Name = "buttonEditEntry";
+            buttonEditEntry.Size = new Size(209, 30);
+            buttonEditEntry.TabIndex = 1;
+            buttonEditEntry.Text = "Edit selected";
+            buttonEditEntry.UseVisualStyleBackColor = true;
             // 
-            // buttonAddPhonenumber
+            // buttonAddEntry
             // 
-            buttonAddPhonenumber.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonAddPhonenumber.Location = new Point(12, 12);
-            buttonAddPhonenumber.Name = "buttonAddPhonenumber";
-            buttonAddPhonenumber.Size = new Size(209, 30);
-            buttonAddPhonenumber.TabIndex = 0;
-            buttonAddPhonenumber.Text = "Add new";
-            buttonAddPhonenumber.UseVisualStyleBackColor = true;
+            buttonAddEntry.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonAddEntry.Location = new Point(12, 12);
+            buttonAddEntry.Name = "buttonAddEntry";
+            buttonAddEntry.Size = new Size(209, 30);
+            buttonAddEntry.TabIndex = 0;
+            buttonAddEntry.Text = "Add new";
+            buttonAddEntry.UseVisualStyleBackColor = true;
             // 
             // dataGridView
             // 
@@ -148,9 +149,9 @@
         #endregion
 
         private SplitContainer splitContainer;
-        private Button buttonDeletePhonenumber;
-        private Button buttonEditPhonenumber;
-        private Button buttonAddPhonenumber;
+        private Button buttonDeleteEntry;
+        private Button buttonEditEntry;
+        private Button buttonAddEntry;
         private DataGridView dataGridView;
         private DataGridViewTextBoxColumn EntryName;
         private DataGridViewTextBoxColumn EntryPhoneNumber;

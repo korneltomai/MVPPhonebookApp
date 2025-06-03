@@ -20,16 +20,18 @@
                 using var stream = _fileSystem.OpenRead(_filePath);
                 using var reader = new StreamReader(stream);
 
-                List<string> lines = reader.ReadToEnd().Split('\n').ToList();
+                List<string> lines = reader.ReadToEnd().Split("\r\n").ToList();
 
-                if (lines.Count > 1 && lines.Any(l => l.Trim() == string.Empty))
+                if (lines.Count > 1 && lines.Any(l => l.Trim() == string.Empty && l != lines.Last()))
                     throw new InvalidOperationException("The entries file contains empty lines.");
-
-                if (lines.Count == 1 && lines[0].Trim() == string.Empty)
-                    return entries;
 
                 foreach (string line in lines)
                 {
+                    Console.WriteLine(line);
+
+                    if (line == lines.Last() && line == string.Empty)
+                        break;
+
                     string[] values = line.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
                     if (values.Length != 2)
@@ -44,6 +46,23 @@
             }
 
             return entries;
+        }
+
+        public void DeleteEntry(PhonebookEntry entry)
+        {
+            if (!_fileSystem.FileExists(_filePath))
+                throw new FileNotFoundException("The entries file does not exist.");
+
+            List<PhonebookEntry> entries = GetAllEntries().ToList();
+            entries.RemoveAll(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber);
+
+            using var stream = _fileSystem.CreateFile(_filePath);
+            using var writer = new StreamWriter(stream);
+
+            foreach (var e in entries)
+            {
+                writer.WriteLine($"{e.Name},{e.PhoneNumber}");
+            }
         }
     }
 }
