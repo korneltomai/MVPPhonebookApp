@@ -12,6 +12,8 @@ namespace WinformsMVPPhonebookApp
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 
+            bool successfulLaunch = true;
+
             var mainView = new Views.MainForm();
             var fileSystem = new Models.RealFileSystem();
             var repository = new Models.CsvPhonebookRepository(fileSystem, "entries.csv");
@@ -25,10 +27,12 @@ namespace WinformsMVPPhonebookApp
                 DialogResult result = MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 if (result == DialogResult.OK)
                     Application.Exit();
-                else
-                    Application.Run(mainView);
+
+                successfulLaunch = false;
             }
-            
+
+            if (successfulLaunch)
+                Application.Run(mainView);
         }
     }
 }
