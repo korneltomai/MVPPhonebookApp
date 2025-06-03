@@ -27,8 +27,6 @@
 
                 foreach (string line in lines)
                 {
-                    Console.WriteLine(line);
-
                     if (line == lines.Last() && line == string.Empty)
                         break;
 
@@ -57,7 +55,7 @@
             entries.RemoveAll(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber);
 
             using var stream = _fileSystem.CreateFile(_filePath);
-            using var writer = new StreamWriter(stream);
+            using var writer = new StreamWriter(stream, leaveOpen: true);
 
             foreach (var e in entries)
             {

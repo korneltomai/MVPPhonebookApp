@@ -1,4 +1,6 @@
-﻿using WinformsMVPPhonebookApp.Models;
+﻿using System.IO;
+using System.Text;
+using WinformsMVPPhonebookApp.Models;
 
 namespace WinformsMVPPhonebookApp.UnitTests.Models
 {
@@ -12,7 +14,7 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             var stubFileSystem = new FakeFileSystem
             {
                 DoesFileExists = true,
-                FileContent = "John Doe,123456789\nJane Smith,987654321"
+                FileContent = "John Doe,123456789\r\nJane Smith,987654321"
             };
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
@@ -34,7 +36,6 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             var stubFileSystem = new FakeFileSystem
             {
                 DoesFileExists = true,
-                FileContent = string.Empty
             };
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
@@ -54,8 +55,8 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             var stubFileSystem = new FakeFileSystem
             {
                 DoesFileExists = true,
-                FileContent = "John Doe,123456789\n" +
-                              $"{name},{phoneNumber}\n" +
+                FileContent = "John Doe,123456789\r\n" +
+                              $"{name},{phoneNumber}\r\n" +
                               "Jane Smith,987654321"
             };
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
@@ -71,8 +72,8 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             var stubFileSystem = new FakeFileSystem
             {
                 DoesFileExists = true,
-                FileContent = "John Doe,123456789\n" +
-                              $"\n" +
+                FileContent = "John Doe,123456789\r\n" +
+                              $"\r\n" +
                               "Jane Smith,987654321"
             };
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
@@ -115,6 +116,27 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             Assert.That(mockFileSystem.CreateFileCalled, Is.True);
         }
 
+        [Test]
+        public void DeleteEntry_WhenEntryExists_DeletesEntry()
+        {
+            // Arrange
+            var stubFileSystem = new FakeFileSystem
+            {
+                DoesFileExists = true,
+                FileContent = "John Doe,123456789\r\nJane Smith,987654321"
+            };
+            var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
+            var entryToDelete = new PhonebookEntry("John Doe", "123456789");
+
+            // Act
+            repository.DeleteEntry(entryToDelete);
+            var entries = repository.GetAllEntries().ToList();
+
+            // Assert
+            Assert.That(entries, Has.Count.EqualTo(1));
+            Assert.That(entries.Contains(entryToDelete), Is.False);
+        }
+
         public class FakeFileSystem : IFileSystem
         {
             public bool CreateFileCalled { get; private set; } = false;
@@ -128,7 +150,29 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models
             public Stream CreateFile(string path)
             {
                 CreateFileCalled = true;
-                return new MemoryStream();
+                return new WriteBackStream(content =>
+                {
+                    FileContent = content;
+                });
+            }
+        }
+
+        public class WriteBackStream : MemoryStream
+        {
+            private readonly Action<string> _onDispose;
+
+            public WriteBackStream(Action<string> onDispose) : base()
+            {
+                _onDispose = onDispose;
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                Position = 0;
+                using var reader = new StreamReader(this, leaveOpen: true);
+                var content = reader.ReadToEnd();
+                _onDispose(content);
+                base.Dispose(disposing);
             }
         }
     }
