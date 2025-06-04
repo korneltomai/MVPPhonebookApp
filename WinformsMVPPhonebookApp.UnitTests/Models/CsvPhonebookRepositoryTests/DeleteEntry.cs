@@ -15,7 +15,6 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
                 DoesFileExists = true,
                 FileContent = "John Doe,123456789\r\nJane Smith,987654321"
             };
-            
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
             var entryToDelete = new PhonebookEntry("John Doe", "123456789");
@@ -44,7 +43,6 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
                 DoesFileExists = true,
                 FileContent = "John Doe,123456789\r\nJane Smith,987654321"
             };
-            
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
             
             var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
@@ -62,7 +60,6 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
             {
                 DoesFileExists = false,
             };
-            
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
             
             var entryToDelete = new PhonebookEntry("Does not exist", "999999999");

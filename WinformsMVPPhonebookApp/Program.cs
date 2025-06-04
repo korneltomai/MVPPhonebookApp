@@ -17,14 +17,15 @@ namespace WinformsMVPPhonebookApp
             var mainView = new Views.MainForm();
             var fileSystem = new Models.RealFileSystem();
             var repository = new Models.CsvPhonebookRepository(fileSystem, "entries.csv");
-            
-            try 
+            var mainPresenter = new Presenters.MainPresenter(mainView, repository);
+
+            try
             {
-                var mainPresenter = new Presenters.MainPresenter(mainView, repository);
+                mainPresenter.LoadEntries();
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException ex)
             {
-                DialogResult result = MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult result = MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 if (result == DialogResult.OK)
                     Application.Exit();
 

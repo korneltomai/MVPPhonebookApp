@@ -26,6 +26,11 @@ namespace WinformsMVPPhonebookApp.Views
             dataGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromKnownColor(System.Drawing.KnownColor.Control);
         }
 
+        public void ShowError(string message)
+        {
+            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private void DataGridView_SelectionChanged(object sender, EventArgs e)
         {
             buttonEditEntry.Enabled = SelectedEntry != null;

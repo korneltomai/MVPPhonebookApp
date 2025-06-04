@@ -15,7 +15,6 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
                 DoesFileExists = true,
                 FileContent = "John Doe,123456789\r\nJane Smith,987654321"
             };
-            
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
             
             var entryToAdd = new PhonebookEntry("Alice Johnson", "5551234567");
@@ -46,7 +45,6 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
                 DoesFileExists = true,
                 FileContent = "John Doe,123456789\r\nJane Smith,987654321\r\nAlice Johnson,5551234567"
             };
-            
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
             
             var entryToAdd = new PhonebookEntry("Alice Johnson", "5551234567");
@@ -64,7 +62,6 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
             {
                 DoesFileExists = false,
             };
-            
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
             
             var entryToAdd = new PhonebookEntry("Alice Johnson", "5551234567");
