@@ -4,5 +4,6 @@
     {
         IEnumerable<PhonebookEntry> GetAllEntries();
         void DeleteEntry(PhonebookEntry entry);
+        void AddEntry(PhonebookEntry entry);
     }
 }

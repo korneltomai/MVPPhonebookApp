@@ -66,5 +66,26 @@
                 writer.WriteLine($"{e.Name},{e.PhoneNumber}");
             }
         }
+
+        public void AddEntry(PhonebookEntry entry)
+        {
+            if (!_fileSystem.FileExists(_filePath))
+               throw new FileNotFoundException("The entries file does not exist.");
+
+            List<PhonebookEntry> entries = GetAllEntries().ToList();
+
+            if (entries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber))
+                throw new InvalidOperationException("An entry with the same values already exists.");
+
+            entries.Add(entry);
+
+            using var stream = _fileSystem.CreateFile(_filePath);
+            using var writer = new StreamWriter(stream, leaveOpen: true);
+
+            foreach (var e in entries)
+            {
+                writer.WriteLine($"{e.Name},{e.PhoneNumber}");
+            }
+        }
     }
 }
