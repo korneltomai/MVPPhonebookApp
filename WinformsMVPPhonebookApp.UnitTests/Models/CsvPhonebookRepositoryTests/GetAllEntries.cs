@@ -14,17 +14,23 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
                 DoesFileExists = true,
                 FileContent = "John Doe,123456789\r\nJane Smith,987654321"
             };
+            
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
+            
+            var expectedEntries = new List<PhonebookEntry>
+            {
+                new PhonebookEntry("John Doe", "123456789"),
+                new PhonebookEntry("Jane Smith", "987654321")
+            };
 
             // Act
             var entries = repository.GetAllEntries().ToList();
 
             // Assert
-            Assert.That(entries, Has.Count.EqualTo(2));
-            Assert.That(entries[0].Name, Is.EqualTo("John Doe"));
-            Assert.That(entries[0].PhoneNumber, Is.EqualTo("123456789"));
-            Assert.That(entries[1].Name, Is.EqualTo("Jane Smith"));
-            Assert.That(entries[1].PhoneNumber, Is.EqualTo("987654321"));
+            Assert.That(expectedEntries.Count, Is.EqualTo(entries.Count));
+            Assert.That(entries, Has.All.Matches<PhonebookEntry>(entry =>
+                expectedEntries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber)
+            ));
         }
 
         [Test]
@@ -35,6 +41,7 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
             {
                 DoesFileExists = true,
             };
+            
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
             // Act
@@ -56,6 +63,7 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
                 FileContent = "John Doe,123456789\r\n" +
                               $"{name},{phoneNumber}\r\n" +
                               "Jane Smith,987654321"
+            
             };
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
@@ -74,6 +82,7 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
                 FileContent = "John Doe,123456789\r\n" +
                               $"\r\n" +
                               "Jane Smith,987654321"
+            
             };
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
@@ -90,6 +99,7 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
             {
                 DoesFileExists = false
             };
+
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
             // Act
@@ -107,6 +117,7 @@ namespace WinformsMVPPhonebookApp.UnitTests.Models.CsvPhonebookRepositoryTests
             {
                 DoesFileExists = false
             };
+            
             var repository = new CsvPhonebookRepository(mockFileSystem, "fakePath.csv");
 
             // Act

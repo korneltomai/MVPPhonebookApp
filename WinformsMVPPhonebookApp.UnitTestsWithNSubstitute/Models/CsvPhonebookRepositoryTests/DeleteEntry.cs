@@ -15,18 +15,25 @@ namespace WinformsMVPPhonebookApp.UnitTestsWithNSubstitute.Models.CsvPhonebookRe
             string fileContent = "John Doe,123456789\r\nJane Smith,987654321";
             stubFileSystem.OpenRead(Arg.Any<string>()).Returns(_ => new MemoryStream(System.Text.Encoding.UTF8.GetBytes(fileContent)));
             stubFileSystem.CreateFile(Arg.Any<string>()).Returns(new WriteBackStream(content => fileContent = content));
-
+            
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
+
             var entryToDelete = new PhonebookEntry("John Doe", "123456789");
+            var expectedEntries = new List<PhonebookEntry>
+            {
+                new PhonebookEntry("Jane Smith", "987654321")
+            };
 
             // Act
             repository.DeleteEntry(entryToDelete);
 
-            // Assert
             var entries = repository.GetAllEntries().ToList();
 
-            Assert.That(entries, Has.Count.EqualTo(1));
-            Assert.That(entries.Contains(entryToDelete), Is.False);
+            // Assert
+            Assert.That(expectedEntries.Count, Is.EqualTo(entries.Count));
+            Assert.That(entries, Has.All.Matches<PhonebookEntry>(entry => 
+                expectedEntries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber)
+            ));
         }
 
         [Test]
@@ -38,6 +45,7 @@ namespace WinformsMVPPhonebookApp.UnitTestsWithNSubstitute.Models.CsvPhonebookRe
             stubFileSystem.OpenRead(Arg.Any<string>()).Returns(_ => new MemoryStream(System.Text.Encoding.UTF8.GetBytes(fileContent)));
 
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
+            
             var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
 
             // Assert + Act
@@ -53,6 +61,7 @@ namespace WinformsMVPPhonebookApp.UnitTestsWithNSubstitute.Models.CsvPhonebookRe
             stubFileSystem.FileExists(Arg.Any<string>()).Returns(false);
 
             var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
+            
             var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
 
             // Assert + Act

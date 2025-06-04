@@ -19,15 +19,20 @@ namespace WinformsMVPPhonebookApp.UnitTestsWithNSubstitute.Models.CsvPhonebookRe
 
             var repository = new CsvPhonebookRepository(stubFileSystem, "fake.csv");
 
+            var expectedEntries = new List<PhonebookEntry>
+            {
+                new PhonebookEntry("John Doe", "123456789"),
+                new PhonebookEntry("Jane Smith", "987654321")
+            };
+
             // Act
             var entries = repository.GetAllEntries().ToList();
 
             // Assert
-            Assert.That(entries, Has.Count.EqualTo(2));
-            Assert.That(entries[0].Name, Is.EqualTo("John Doe"));
-            Assert.That(entries[0].PhoneNumber, Is.EqualTo("123456789"));
-            Assert.That(entries[1].Name, Is.EqualTo("Jane Smith"));
-            Assert.That(entries[1].PhoneNumber, Is.EqualTo("987654321"));
+            Assert.That(expectedEntries.Count, Is.EqualTo(entries.Count));
+            Assert.That(entries, Has.All.Matches<PhonebookEntry>(entry =>
+                expectedEntries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber)
+            ));
         }
 
         [Test]
