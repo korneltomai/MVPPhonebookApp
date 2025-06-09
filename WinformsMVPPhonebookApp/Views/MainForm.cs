@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows.Forms;
 using WinformsMVPPhonebookApp.Models;
 
@@ -7,10 +8,11 @@ namespace WinformsMVPPhonebookApp.Views
     {
         public event EventHandler? DeleteEntryClicked;
 
-        public object Entries
+        private BindingList<PhonebookEntry> _bindingList = [];
+
+        public IList<PhonebookEntry> Entries
         {
-            get => dataGridView.DataSource;
-            set => dataGridView.DataSource = value;
+            get => _bindingList;
         }
 
         public PhonebookEntry? SelectedEntry
@@ -21,6 +23,8 @@ namespace WinformsMVPPhonebookApp.Views
         public MainForm()
         {
             InitializeComponent();
+
+            dataGridView.DataSource = _bindingList;
 
             dataGridView.EnableHeadersVisualStyles = false;
             dataGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromKnownColor(System.Drawing.KnownColor.Control);

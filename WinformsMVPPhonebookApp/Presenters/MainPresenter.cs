@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Data;
-using WinformsMVPPhonebookApp.Models;
+﻿using WinformsMVPPhonebookApp.Models;
 using WinformsMVPPhonebookApp.Views;
 
 namespace WinformsMVPPhonebookApp.Presenters
@@ -9,8 +7,6 @@ namespace WinformsMVPPhonebookApp.Presenters
     {
         private readonly IMainView _view;
         private readonly IPhonebookRepository _repository;
-
-        public BindingList<PhonebookEntry> BindingList { get; private set; } = [];
 
         public MainPresenter(IMainView view, IPhonebookRepository repository)
         {
@@ -22,8 +18,13 @@ namespace WinformsMVPPhonebookApp.Presenters
 
         public void LoadEntries()
         {
-            BindingList = new(_repository.GetAllEntries().ToList());
-            _view.Entries = BindingList;
+            var allEntries = _repository.GetAllEntries();
+
+            _view.Entries.Clear();
+            foreach (var entry in allEntries)
+            {
+                _view.Entries.Add(entry);
+            }
         }
 
         private void DeleteSelectedEntry(object? sender, EventArgs e)
@@ -47,7 +48,7 @@ namespace WinformsMVPPhonebookApp.Presenters
                 _view.ShowError("An unexpected error occurred: " + ex.Message);
             }
 
-            BindingList.Remove(_view.SelectedEntry);
+            _view.Entries.Remove(_view.SelectedEntry);
         }
     }
 }
