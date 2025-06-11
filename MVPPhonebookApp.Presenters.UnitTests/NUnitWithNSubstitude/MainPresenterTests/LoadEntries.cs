@@ -3,6 +3,7 @@ using MVPPhonebookApp.Core.Models;
 using MVPPhonebookApp.Core.Repository;
 using MVPPhonebookApp.Presenters.Presenters;
 using MVPPhonebookApp.Presenters.Views;
+using MVPPhonebookApp.Core.Services;
 
 namespace MVPPhonebookApp.Presenters.UnitTests.NUnitWithNSubstitude.MainPresenterTests;
 
@@ -10,33 +11,33 @@ namespace MVPPhonebookApp.Presenters.UnitTests.NUnitWithNSubstitude.MainPresente
 public class LoadEntries
 {
     [Test]
-    public void WhenCalled_CallsGetAllEntriesFromRepository()
+    public void WhenCalled_CallsGetAllEntriesFromService()
     {
         // Arrange
         var stubMainView = Substitute.For<IMainView>();
-        var mockPhonebookRepository = Substitute.For<IPhonebookRepository>();
-        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookRepository);
+        var mockPhonebookEntryService = Substitute.For<IPhonebookEntryService>();
+        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService);
 
         // Act  
         mainPresenter.LoadEntries();
 
         // Assert
-        mockPhonebookRepository.Received().GetAllEntries();
+        mockPhonebookEntryService.Received().GetAllEntries();
     }
 
     [Test]
-    public void WhenGotValidEntriesFromRepository_AddsEntriesToView()
+    public void WhenGotValidEntriesFromService_AddsEntriesToView()
     {
         // Arrange
         var mockMainView = Substitute.For<IMainView>();
-        var stubPhonebookRepository = Substitute.For<IPhonebookRepository>();
-        stubPhonebookRepository.GetAllEntries().Returns(_ =>
+        var stubPhonebookEntryService = Substitute.For<IPhonebookEntryService>();
+        stubPhonebookEntryService.GetAllEntries().Returns(_ =>
             [
                 new PhonebookEntry("John Doe", "123456789"),
                 new PhonebookEntry("Jane Smith", "987654321")
             ]
         );
-        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookRepository);
+        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService);
 
         var expectedEntries = new List<PhonebookEntry>
             {
@@ -48,7 +49,7 @@ public class LoadEntries
         mainPresenter.LoadEntries();
 
         // Assert
-        Assert.That(expectedEntries.Count, Is.EqualTo(mockMainView.Entries.Count));
+        Assert.That(mockMainView.Entries.Count, Is.EqualTo(expectedEntries.Count));
         Assert.That(mockMainView.Entries, Has.All.Matches<PhonebookEntry>(entry =>
             expectedEntries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber)
         ));

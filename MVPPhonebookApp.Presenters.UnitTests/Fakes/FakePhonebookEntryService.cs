@@ -1,9 +1,10 @@
 ﻿using MVPPhonebookApp.Core.Models;
 using MVPPhonebookApp.Core.Repository;
+using MVPPhonebookApp.Core.Services;
 
 namespace MVPPhonebookApp.Presenters.UnitTests.Fakes;
 
-public class FakePhonebookRepository : IPhonebookRepository
+public class FakePhonebookEntryService : IPhonebookEntryService
 {
     public List<PhonebookEntry> Entries { get; set; } = [];
     public Exception? AddEntryWillThrow { get; set; } = null;
@@ -12,7 +13,9 @@ public class FakePhonebookRepository : IPhonebookRepository
     public bool DeleteEntryCalled { get; private set; } = false;
     public bool GetAllEntriesCalled { get; private set; } = false;
 
-    public void AddEntry(PhonebookEntry entry)
+    public FakePhonebookEntryService() : base() { }
+
+public void AddEntry(PhonebookEntry entry)
     {
         AddEntryCalled = true;
 

@@ -1,5 +1,6 @@
 using MVPPhonebookApp.Core.FileSystem;
 using MVPPhonebookApp.Core.Repository;
+using MVPPhonebookApp.Core.Services;
 using MVPPhonebookApp.Forms;
 using MVPPhonebookApp.Presenters.Presenters;
 
@@ -22,7 +23,8 @@ namespace MVPPhonebookApp
             var mainView = new MainForm();
             var fileSystem = new RealFileSystem();
             var repository = new CsvPhonebookRepository(fileSystem, "entries.csv");
-            var mainPresenter = new MainPresenter(mainView, repository);
+            var phonebookEntryService = new PhonebookEntryService(repository);
+            var mainPresenter = new MainPresenter(mainView, phonebookEntryService);
 
             try
             {

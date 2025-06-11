@@ -1,4 +1,4 @@
-﻿using MVPPhonebookApp.Core.Repository;
+﻿using MVPPhonebookApp.Core.Services;
 using MVPPhonebookApp.Presenters.Views;
 
 namespace MVPPhonebookApp.Presenters.Presenters;
@@ -6,19 +6,19 @@ namespace MVPPhonebookApp.Presenters.Presenters;
 public class MainPresenter
 {
     private readonly IMainView _view;
-    private readonly IPhonebookRepository _repository;
+    private readonly IPhonebookEntryService _phonebookEntryService;
 
-    public MainPresenter(IMainView view, IPhonebookRepository repository)
+    public MainPresenter(IMainView view, IPhonebookEntryService phonebookEntryService)
     {
         _view = view;
-        _repository = repository;
+        _phonebookEntryService = phonebookEntryService;
 
         _view.DeleteEntryClicked += DeleteSelectedEntry;
     }
 
     public void LoadEntries()
     {
-        _view.Entries = _repository.GetAllEntries().ToList();
+        _view.Entries = _phonebookEntryService.GetAllEntries().ToList();
     }
 
     private void DeleteSelectedEntry(object? sender, EventArgs e)
@@ -31,7 +31,7 @@ public class MainPresenter
 
         try
         {
-            _repository.DeleteEntry(_view.SelectedEntry);
+            _phonebookEntryService.DeleteEntry(_view.SelectedEntry);
         }
         catch (Exception ex) when (ex is InvalidOperationException || ex is FileNotFoundException)
         {

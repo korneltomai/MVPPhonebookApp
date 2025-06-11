@@ -1,4 +1,5 @@
 ﻿using MVPPhonebookApp.Core.Models;
+using MVPPhonebookApp.Core.Services;
 using MVPPhonebookApp.Presenters.Presenters;
 using MVPPhonebookApp.Presenters.UnitTests.Fakes;
 
@@ -8,12 +9,12 @@ namespace MVPPhonebookApp.Presenters.UnitTests.NUnit.MainPresenterTests;
 public class DeleteSelectedEntry
 {
     [Test]
-    public void WhenSelectedEntryIsNotNull_CallsDeleteEntryFromRepository()
+    public void WhenSelectedEntryIsNotNull_CallsDeleteEntryFromService()
     {
         // Arrange
         var stubMainView = new FakeMainView();
-        var mockPhonebookRepository = new FakePhonebookRepository();
-        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookRepository);
+        var mockPhonebookEntryService = new FakePhonebookEntryService();
+        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService);
 
         stubMainView.SelectedEntry = new PhonebookEntry("Fake Entry", "123456789");
 
@@ -21,7 +22,7 @@ public class DeleteSelectedEntry
         stubMainView.TriggerDeleteEntryClicked();
 
         // Assert
-        Assert.That(mockPhonebookRepository.DeleteEntryCalled, Is.True);
+        Assert.That(mockPhonebookEntryService.DeleteEntryCalled, Is.True);
     }
 
     [Test]
@@ -29,9 +30,9 @@ public class DeleteSelectedEntry
     {
         // Arrange
         var stubMainView = new FakeMainView();
-        var mockPhonebookRepository = new FakePhonebookRepository();
-        mockPhonebookRepository.DeleteEntryWillThrow = new Exception("Fake exception");
-        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookRepository);
+        var stubPhonebookEntryService = new FakePhonebookEntryService();
+        stubPhonebookEntryService.DeleteEntryWillThrow = new Exception("Fake exception");
+        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService);
 
         stubMainView.SelectedEntry = new PhonebookEntry("Fake Entry", "123456789");
 
@@ -47,8 +48,8 @@ public class DeleteSelectedEntry
     {
         // Arrange
         var stubMainView = new FakeMainView();
-        var mockPhonebookRepository = new FakePhonebookRepository();
-        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookRepository);
+        var stubPhonebookEntryService = new FakePhonebookEntryService();
+        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService);
 
         stubMainView.SelectedEntry = null;
 
@@ -71,8 +72,8 @@ public class DeleteSelectedEntry
             ]
         };
         mockMainView.SelectedEntry = mockMainView.Entries.First();
-        var stubPhonebookRepository = new FakePhonebookRepository();
-        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookRepository);
+        var stubPhonebookEntryService = new PhonebookEntryService();
+        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService);
 
         var expectedEntries = new List<PhonebookEntry>
         {

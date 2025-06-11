@@ -8,18 +8,18 @@ namespace MVPPhonebookApp.Presenters.UnitTests.NUnit.MainPresenterTests;
 public class LoadEntries
 {
     [Test]
-    public void WhenCalled_CallsGetAllEntriesFromRepository()
+    public void WhenCalled_CallsGetAllEntriesFromService()
     {
         // Arrange
         var stubMainView = new FakeMainView();
-        var mockPhonebookRepository = new FakePhonebookRepository();
-        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookRepository);
+        var stubPhonebookEntryService = new FakePhonebookEntryService();
+        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService);
 
         // Act  
         mainPresenter.LoadEntries();
 
         // Assert
-        Assert.That(mockPhonebookRepository.GetAllEntriesCalled, Is.True);
+        Assert.That(stubPhonebookEntryService.GetAllEntriesCalled, Is.True);
     }
 
     [Test]
@@ -27,20 +27,20 @@ public class LoadEntries
     {
         // Arrange
         var stubMainView = new FakeMainView();
-        var stubPhonebookRepository = new FakePhonebookRepository
+        var stubPhonebookEntryService = new FakePhonebookEntryService
         {
-            Entries = new List<PhonebookEntry>
-            {
+            Entries =
+            [
                 new PhonebookEntry("John Doe", "123456789"),
                 new PhonebookEntry ("Jane Smith", "987654321")
-            }
+            ]
         };
-        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookRepository);
+        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService);
 
         var expectedEntries = new List<PhonebookEntry>
             {
-                new PhonebookEntry("John Doe", "123456789"),
-                new PhonebookEntry("Jane Smith", "987654321")
+                new("John Doe", "123456789"),
+                new("Jane Smith", "987654321")
             };
 
 
