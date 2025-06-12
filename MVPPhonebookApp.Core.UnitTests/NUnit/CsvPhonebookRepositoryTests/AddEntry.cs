@@ -8,7 +8,7 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnit.CsvPhonebookRepositoryTests;
 public class AddEntry
 {
     [Test]
-    public void WhenFileExists_AddsEntry()
+    public void WhenFileExistsAndDoesNotContainEntry_AddsEntry()
     {
         // Arrange
         var stubFileSystem = new FakeFileSystem
@@ -28,17 +28,18 @@ public class AddEntry
 
         // Act
         repository.AddEntry(entryToAdd);
-        var entries = repository.GetAllEntries().ToList();
 
         // Assert
+        var entries = repository.GetAllEntries().ToList();
+
         Assert.That(expectedEntries.Count, Is.EqualTo(entries.Count));
         Assert.That(entries, Has.All.Matches<PhonebookEntry>(entry =>
             expectedEntries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber)
         ));
     }
 
-    [TestCase("Does not exist yet", "123456789")]
     [TestCase("John Doe", "333333333")]
+    [TestCase("Does not exist yet", "123456789")]
     [TestCase("John Doe", "123456789")]
     public void WhenFileExistsAndAlreadyContainsSimilarEntry_ThrowsInvalidOperationException(string name, string phoneNumber)
     {

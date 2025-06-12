@@ -10,7 +10,7 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnitWithNSubstitude.CsvPhonebookReposi
 public class AddEntry
 {
     [Test]
-    public void WhenFileExists_AddsEntry()
+    public void WhenFileExistsAndDoesNotContainEntry_AddsEntry()
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
@@ -41,8 +41,8 @@ public class AddEntry
         ));
     }
 
-    [TestCase("Does not exist yet", "123456789")]
     [TestCase("John Doe", "333333333")]
+    [TestCase("Does not exist yet", "123456789")]
     [TestCase("John Doe", "123456789")]
     public void WhenFileExistsAndAlreadyContainsSimilarEntry_ThrowsInvalidOperationException(string name, string phoneNumber)
     {
