@@ -41,8 +41,10 @@ public class AddEntry
         ));
     }
 
-    [Test]
-    public void WhenFileExistsAndAlreadyContainsEntry_ThrowsInvalidOperationException()
+    [TestCase("Does not exist yet", "123456789")]
+    [TestCase("John Doe", "333333333")]
+    [TestCase("John Doe", "123456789")]
+    public void WhenFileExistsAndAlreadyContainsSimilarEntry_ThrowsInvalidOperationException(string name, string phoneNumber)
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
@@ -53,11 +55,11 @@ public class AddEntry
 
         var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
-        var entryToAdd = new PhonebookEntry("Alice Johnson", "5551234567");
+        var entryToAdd = new PhonebookEntry(name, phoneNumber);
 
         // Assert + Act
         Exception exception = Assert.Throws<InvalidOperationException>(() => repository.AddEntry(entryToAdd));
-        Assert.That(exception.Message, Contains.Substring("An entry with the same values already exists"));
+        Assert.That(exception.Message, Does.Contain("An entry with the same").And.Contain("already exists"));
     }
 
     [Test]

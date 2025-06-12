@@ -79,6 +79,10 @@ public class CsvPhonebookRepository : IPhonebookRepository
 
         if (entries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber))
             throw new InvalidOperationException("An entry with the same values already exists.");
+        else if (entries.Any(e => e.Name == entry.Name))
+            throw new InvalidOperationException("An entry with the same name already exists.");
+        else if (entries.Any(e => e.PhoneNumber == entry.PhoneNumber))
+            throw new InvalidOperationException("An entry with the same phone number already exists.");
 
         entries.Add(entry);
 
@@ -89,5 +93,10 @@ public class CsvPhonebookRepository : IPhonebookRepository
         {
             writer.WriteLine($"{e.Name},{e.PhoneNumber}");
         }
+    }
+
+    public void UpdateEntry(PhonebookEntry oldEntry, PhonebookEntry newEntry)
+    {
+
     }
 }

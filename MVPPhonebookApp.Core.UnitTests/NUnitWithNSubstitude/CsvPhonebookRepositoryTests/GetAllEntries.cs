@@ -2,6 +2,7 @@
 using MVPPhonebookApp.Core.FileSystem;
 using MVPPhonebookApp.Core.Models;
 using MVPPhonebookApp.Core.Repository;
+using System;
 
 namespace MVPPhonebookApp.Core.UnitTests.NUnitWithNSubstitude.CsvPhonebookRepositoryTests;
 
@@ -9,7 +10,7 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnitWithNSubstitude.CsvPhonebookReposi
 public class GetAllEntries
 {
     [Test]
-    public void GetAllEntries_WhenFileExists_ReturnsEntries()
+    public void WhenFileExists_ReturnsEntries()
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
@@ -37,7 +38,7 @@ public class GetAllEntries
     }
 
     [Test]
-    public void GetAllEntries_WhenFileExistsAndIsEmpty_ReturnsEmptyList()
+    public void WhenFileExistsAndIsEmpty_ReturnsEmptyList()
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
@@ -56,7 +57,7 @@ public class GetAllEntries
     [TestCase("", "123456789")]
     [TestCase("John Doe", "")]
     [TestCase("", "")]
-    public void GetAllEntries_WhenFileExistsWithMissingValues_ThrowsInvalidOperationException(string name, string phoneNumber)
+    public void WhenFileExistsWithMissingValues_ThrowsInvalidOperationException(string name, string phoneNumber)
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
@@ -67,11 +68,12 @@ public class GetAllEntries
         var repository = new CsvPhonebookRepository(stubFileSystem, "fake.csv");
 
         // Act + Assert
-        Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
+        Exception exception = Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
+        Assert.That(exception.Message, Contains.Substring("Each line in the entries file must contain exactly two values."));
     }
 
     [Test]
-    public void GetAllEntries_WhenFileExistsWithEmptyLines_ThrowsInvalidOperationException()
+    public void WhenFileExistsWithEmptyLines_ThrowsInvalidOperationException()
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
@@ -82,11 +84,12 @@ public class GetAllEntries
         var repository = new CsvPhonebookRepository(stubFileSystem, "fake.csv");
 
         // Assert
-        Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
+        Exception exception = Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
+        Assert.That(exception.Message, Contains.Substring("The entries file must not contain empty lines"));
     }
 
     [Test]
-    public void GetAllEntries_WhenFileDoesNotExists_ReturnEmptyList()
+    public void WhenFileDoesNotExists_ReturnEmptyList()
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
@@ -103,7 +106,7 @@ public class GetAllEntries
     }
 
     [Test]
-    public void GetAllEntries_WhenFileDoesNotExists_CreatesFile()
+    public void WhenFileDoesNotExists_CreatesFile()
     {
         // Arrange
         var mockFileSystem = Substitute.For<IFileSystem>();

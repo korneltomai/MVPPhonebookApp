@@ -2,7 +2,7 @@
 using MVPPhonebookApp.Core.Repository;
 using MVPPhonebookApp.Core.UnitTests.Fakes;
 
-namespace MVPPhonebookApp.UnitTests.NUnit.Core.CsvPhonebookRepositoryTests;
+namespace MVPPhonebookApp.Core.UnitTests.NUnit.CsvPhonebookRepositoryTests;
 
 [TestFixture]
 public class GetAllEntries

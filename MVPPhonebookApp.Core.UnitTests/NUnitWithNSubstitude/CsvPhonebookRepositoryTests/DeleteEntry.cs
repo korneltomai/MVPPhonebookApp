@@ -9,7 +9,7 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnitWithNSubstitude.CsvPhonebookReposi
 public class DeleteEntry
 {
     [Test]
-    public void DeleteEntry_WhenEntryExists_DeletesEntry()
+    public void WhenEntryExists_DeletesEntry()
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
@@ -39,7 +39,7 @@ public class DeleteEntry
     }
 
     [Test]
-    public void DeleteEntry_WhenEntryDoesNotExist_ThrowsInvalidOperationException()
+    public void WhenEntryDoesNotExist_ThrowsInvalidOperationException()
     {
         var stubFileSystem = Substitute.For<IFileSystem>();
         stubFileSystem.FileExists(Arg.Any<string>()).Returns(true);
@@ -56,7 +56,7 @@ public class DeleteEntry
     }
 
     [Test]
-    public void DeleteEntry_WhenFileDoesNotExist_ThrowsFileNotFoundException()
+    public void WhenFileDoesNotExist_ThrowsFileNotFoundException()
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
