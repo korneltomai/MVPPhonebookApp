@@ -57,7 +57,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 10F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(255, 131);
+            tableLayoutPanel1.Size = new Size(360, 131);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
@@ -84,16 +84,18 @@
             // 
             textBoxName.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             textBoxName.Location = new Point(3, 24);
+            textBoxName.MaxLength = 32;
             textBoxName.Name = "textBoxName";
-            textBoxName.Size = new Size(249, 33);
+            textBoxName.Size = new Size(354, 33);
             textBoxName.TabIndex = 2;
             // 
             // textBoxPhoneNumber
             // 
             textBoxPhoneNumber.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             textBoxPhoneNumber.Location = new Point(3, 94);
+            textBoxPhoneNumber.MaxLength = 16;
             textBoxPhoneNumber.Name = "textBoxPhoneNumber";
-            textBoxPhoneNumber.Size = new Size(249, 33);
+            textBoxPhoneNumber.Size = new Size(354, 33);
             textBoxPhoneNumber.TabIndex = 3;
             // 
             // buttonSubmit
@@ -109,7 +111,7 @@
             // buttonCancel
             // 
             buttonCancel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonCancel.Location = new Point(147, 159);
+            buttonCancel.Location = new Point(252, 159);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(120, 35);
             buttonCancel.TabIndex = 2;
@@ -120,7 +122,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(279, 206);
+            ClientSize = new Size(384, 206);
             Controls.Add(buttonCancel);
             Controls.Add(buttonSubmit);
             Controls.Add(tableLayoutPanel1);

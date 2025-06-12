@@ -102,11 +102,12 @@ public class CsvPhonebookRepository : IPhonebookRepository
 
         List<PhonebookEntry> entries = GetAllEntries().ToList();
 
-        if (entries.Any(e => e.Name == newEntry.Name && e.PhoneNumber == newEntry.PhoneNumber))
+        if (entries.Any(e => e.Name == newEntry.Name && e.Name != oldEntry.Name && 
+                             e.PhoneNumber == newEntry.PhoneNumber && e.PhoneNumber != oldEntry.PhoneNumber))
             throw new InvalidOperationException("An entry with the same values already exists.");
-        else if (entries.Any(e => e.Name == newEntry.Name))
+        else if (entries.Any(e => e.Name == newEntry.Name && e.Name != oldEntry.Name))
             throw new InvalidOperationException("An entry with the same name already exists.");
-        else if (entries.Any(e => e.PhoneNumber == newEntry.PhoneNumber))
+        else if (entries.Any(e => e.PhoneNumber == newEntry.PhoneNumber && e.PhoneNumber != oldEntry.PhoneNumber))
             throw new InvalidOperationException("An entry with the same phone number already exists.");
 
         int index = entries.FindIndex(e => e.Name == oldEntry.Name && e.PhoneNumber == oldEntry.PhoneNumber);
