@@ -1,4 +1,5 @@
 ﻿using MVPPhonebookApp.Core.Services;
+using MVPPhonebookApp.Presenters.Services;
 using MVPPhonebookApp.Presenters.Views;
 
 namespace MVPPhonebookApp.Presenters.Presenters;
@@ -7,13 +8,17 @@ public class MainPresenter
 {
     private readonly IMainView _view;
     private readonly PhonebookEntryService _phonebookEntryService;
+    private readonly IAddOrEditDialogService _addOrEditDialogService;
 
-    public MainPresenter(IMainView view, PhonebookEntryService phonebookEntryService)
+    public MainPresenter(IMainView view, PhonebookEntryService phonebookEntryService, IAddOrEditDialogService addOrEditDialogService)
     {
         _view = view;
         _phonebookEntryService = phonebookEntryService;
+        _addOrEditDialogService = addOrEditDialogService;
 
         _view.DeleteEntryClicked += DeleteSelectedEntry;
+        _view.AddEntryClicked += AddNewEntry;
+        _view.UpdateEntryClicked += UpdateEntry;
     }
 
     public void LoadEntries()
@@ -43,5 +48,15 @@ public class MainPresenter
         }
 
         _view.Entries.Remove(_view.SelectedEntry);
+    }
+
+    private void AddNewEntry(object? sender, EventArgs e)
+    {
+        _addOrEditDialogService.ShowAddOrEditDialog();
+    }
+
+    private void UpdateEntry(object? sender, EventArgs e)
+    {
+        _addOrEditDialogService.ShowAddOrEditDialog(_view.SelectedEntry);
     }
 }

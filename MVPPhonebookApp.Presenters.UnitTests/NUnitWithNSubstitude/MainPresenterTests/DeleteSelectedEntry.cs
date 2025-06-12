@@ -5,6 +5,7 @@ using MVPPhonebookApp.Presenters.Presenters;
 using MVPPhonebookApp.Presenters.Views;
 using MVPPhonebookApp.Core.Services;
 using MVPPhonebookApp.Presenters.UnitTests.Fakes;
+using MVPPhonebookApp.Presenters.Services;
 
 namespace MVPPhonebookApp.Presenters.UnitTests.NUnitWithNSubstitude.MainPresenterTests;
 
@@ -18,7 +19,8 @@ public class DeleteSelectedEntry
         var stubMainView = Substitute.For<IMainView>();
         stubMainView.SelectedEntry.Returns(_ => new PhonebookEntry("Fake Entry", "123456789"));
         var mockPhonebookEntryService = Substitute.For<PhonebookEntryService>(new EmptyPhonebookRepository());
-        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService);
+        var stubAddOrEditDialogService = Substitute.For<IAddOrEditDialogService>();
+        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService, stubAddOrEditDialogService);
 
         // Act  
         stubMainView.DeleteEntryClicked += Raise.Event();
@@ -36,7 +38,8 @@ public class DeleteSelectedEntry
         var stubPhonebookEntryService = Substitute.For<PhonebookEntryService>(new EmptyPhonebookRepository());
         stubPhonebookEntryService.When(r => r.DeleteEntry(Arg.Any<PhonebookEntry>()))
             .Do(info => { throw new Exception("Fake exception"); });
-        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService);
+        var stubAddOrEditDialogService = Substitute.For<IAddOrEditDialogService>();
+        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService, stubAddOrEditDialogService);
 
         // Act  
         mockMainView.DeleteEntryClicked += Raise.Event();
@@ -52,7 +55,8 @@ public class DeleteSelectedEntry
         var mockMainView = Substitute.For<IMainView>();
         mockMainView.SelectedEntry.Returns(_ => null);
         var stubPhonebookEntryService = Substitute.For<PhonebookEntryService>(new EmptyPhonebookRepository());
-        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService);
+        var stubAddOrEditDialogService = Substitute.For<IAddOrEditDialogService>();
+        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService, stubAddOrEditDialogService);
 
         // Act  
         mockMainView.DeleteEntryClicked += Raise.Event();
@@ -73,7 +77,8 @@ public class DeleteSelectedEntry
             ];
         mockMainView.SelectedEntry.Returns(_ => mockMainView.Entries.First());
         var stubPhonebookEntryService = Substitute.For<PhonebookEntryService>(new EmptyPhonebookRepository());
-        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService);
+        var stubAddOrEditDialogService = Substitute.For<IAddOrEditDialogService>();
+        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService, stubAddOrEditDialogService);
 
         var expectedEntries = new List<PhonebookEntry>
         {

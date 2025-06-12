@@ -4,6 +4,7 @@ using MVPPhonebookApp.Presenters.Presenters;
 using MVPPhonebookApp.Presenters.Views;
 using MVPPhonebookApp.Core.Services;
 using MVPPhonebookApp.Presenters.UnitTests.Fakes;
+using MVPPhonebookApp.Presenters.Services;
 
 namespace MVPPhonebookApp.Presenters.UnitTests.NUnitWithNSubstitude.MainPresenterTests;
 
@@ -16,7 +17,8 @@ public class LoadEntries
         // Arrange
         var stubMainView = Substitute.For<IMainView>();
         var mockPhonebookEntryService = Substitute.For<PhonebookEntryService>(new EmptyPhonebookRepository());
-        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService);
+        var stubAddOrEditDialogService = Substitute.For<IAddOrEditDialogService>();
+        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService, stubAddOrEditDialogService);
 
         // Act  
         mainPresenter.LoadEntries();
@@ -37,7 +39,8 @@ public class LoadEntries
                 new PhonebookEntry("Jane Smith", "987654321")
             ]
         );
-        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService);
+        var stubAddOrEditDialogService = Substitute.For<IAddOrEditDialogService>();
+        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService, stubAddOrEditDialogService);
 
         var expectedEntries = new List<PhonebookEntry>
             {

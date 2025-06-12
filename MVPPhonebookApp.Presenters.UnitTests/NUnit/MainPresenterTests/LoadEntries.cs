@@ -13,7 +13,8 @@ public class LoadEntries
         // Arrange
         var stubMainView = new FakeMainView();
         var stubPhonebookEntryService = new FakePhonebookEntryService();
-        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService);
+        var stubAddOrEditDialogService = new FakeAddOrEditDialogService();
+        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService, stubAddOrEditDialogService);
 
         // Act  
         mainPresenter.LoadEntries();
@@ -35,7 +36,8 @@ public class LoadEntries
                 new PhonebookEntry ("Jane Smith", "987654321")
             ]
         };
-        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService);
+        var stubAddOrEditDialogService = new FakeAddOrEditDialogService();
+        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService, stubAddOrEditDialogService);
 
         var expectedEntries = new List<PhonebookEntry>
             {

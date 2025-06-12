@@ -7,6 +7,8 @@ namespace MVPPhonebookApp.Forms
     public partial class MainForm : Form, IMainView
     {
         public event EventHandler? DeleteEntryClicked;
+        public event EventHandler? AddEntryClicked;
+        public event EventHandler? UpdateEntryClicked;
 
         private BindingList<PhonebookEntry> _bindingList = [];
 
@@ -28,6 +30,9 @@ namespace MVPPhonebookApp.Forms
         public MainForm()
         {
             InitializeComponent();
+
+            buttonAddEntry.Click += (sender, e) => AddEntryClicked?.Invoke(sender, e);
+            buttonEditEntry.Click += (sender, e) => UpdateEntryClicked?.Invoke(sender, e);
 
             dataGridView.DataSource = _bindingList;
 

@@ -14,7 +14,8 @@ public class DeleteSelectedEntry
         // Arrange
         var stubMainView = new FakeMainView();
         var mockPhonebookEntryService = new FakePhonebookEntryService();
-        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService);
+        var stubAddOrEditDialogService = new FakeAddOrEditDialogService();
+        var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService, stubAddOrEditDialogService);
 
         stubMainView.SelectedEntry = new PhonebookEntry("Fake Entry", "123456789");
 
@@ -32,7 +33,8 @@ public class DeleteSelectedEntry
         var stubMainView = new FakeMainView();
         var stubPhonebookEntryService = new FakePhonebookEntryService();
         stubPhonebookEntryService.DeleteEntryWillThrow = new Exception("Fake exception");
-        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService);
+        var stubAddOrEditDialogService = new FakeAddOrEditDialogService();
+        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService, stubAddOrEditDialogService);
 
         stubMainView.SelectedEntry = new PhonebookEntry("Fake Entry", "123456789");
 
@@ -49,7 +51,8 @@ public class DeleteSelectedEntry
         // Arrange
         var stubMainView = new FakeMainView();
         var stubPhonebookEntryService = new FakePhonebookEntryService();
-        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService);
+        var stubAddOrEditDialogService = new FakeAddOrEditDialogService();
+        var mainPresenter = new MainPresenter(stubMainView, stubPhonebookEntryService, stubAddOrEditDialogService);
 
         stubMainView.SelectedEntry = null;
 
@@ -73,7 +76,8 @@ public class DeleteSelectedEntry
         };
         mockMainView.SelectedEntry = mockMainView.Entries.First();
         var stubPhonebookEntryService = new FakePhonebookEntryService();
-        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService);
+        var stubAddOrEditDialogService = new FakeAddOrEditDialogService();
+        var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService, stubAddOrEditDialogService);
 
         var expectedEntries = new List<PhonebookEntry>
         {
