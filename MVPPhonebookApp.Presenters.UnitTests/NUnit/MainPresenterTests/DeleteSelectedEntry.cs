@@ -26,7 +26,7 @@ public class DeleteSelectedEntry
     }
 
     [Test]
-    public void WhenRepositoryThrowsException_SendsErrorToView()
+    public void WhenServiceThrowsException_SendsErrorToView()
     {
         // Arrange
         var stubMainView = new FakeMainView();

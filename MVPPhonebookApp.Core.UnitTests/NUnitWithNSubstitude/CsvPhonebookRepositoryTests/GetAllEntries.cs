@@ -68,8 +68,8 @@ public class GetAllEntries
         var repository = new CsvPhonebookRepository(stubFileSystem, "fake.csv");
 
         // Act + Assert
-        Exception exception = Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
-        Assert.That(exception.Message, Contains.Substring("Each line in the entries file must contain exactly two values."));
+        Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries(),
+            "Each line in the entries file must contain exactly two values.");
     }
 
     [Test]
@@ -84,8 +84,8 @@ public class GetAllEntries
         var repository = new CsvPhonebookRepository(stubFileSystem, "fake.csv");
 
         // Assert
-        Exception exception = Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries());
-        Assert.That(exception.Message, Contains.Substring("The entries file must not contain empty lines"));
+        Assert.Throws<InvalidOperationException>(() => repository.GetAllEntries(), 
+            "The entries file must not contain empty lines.");
     }
 
     [Test]

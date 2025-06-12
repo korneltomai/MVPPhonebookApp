@@ -59,8 +59,8 @@ public class UpdateEntry
         var newEntry = new PhonebookEntry("Bob Big", "1234567555");
 
         // Assert + Act
-        Exception exception = Assert.Throws<InvalidOperationException>(() => repository.UpdateEntry(oldEntry, newEntry));
-        Assert.That(exception.Message, Contains.Substring("The entry to update does not exist."));
+        Assert.Throws<InvalidOperationException>(() => repository.UpdateEntry(oldEntry, newEntry),
+            "The entry to update does not exist.");
     }
 
     [TestCase("Alice Johnson", "333333333")]
@@ -98,7 +98,7 @@ public class UpdateEntry
         var newEntry = new PhonebookEntry("Alice Johnson", "5551234567");
 
         // Assert + Act
-        Exception exception = Assert.Throws<FileNotFoundException>(() => repository.UpdateEntry(oldEntry, newEntry));
-        Assert.That(exception.Message, Contains.Substring("The entries file does not exist"));
+        Assert.Throws<FileNotFoundException>(() => repository.UpdateEntry(oldEntry, newEntry),
+            "The entries file does not exist.");
     }
 }

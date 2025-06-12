@@ -23,7 +23,7 @@ public class LoadEntries
     }
 
     [Test]
-    public void WhenGotValidEntriesFromRepository_AddsEntriesToView()
+    public void WhenGotValidEntriesFromService_AddsEntriesToView()
     {
         // Arrange
         var stubMainView = new FakeMainView();

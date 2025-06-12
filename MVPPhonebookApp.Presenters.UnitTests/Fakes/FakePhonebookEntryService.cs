@@ -7,15 +7,25 @@ namespace MVPPhonebookApp.Presenters.UnitTests.Fakes;
 public class FakePhonebookEntryService : PhonebookEntryService
 {
     public List<PhonebookEntry> Entries { get; set; } = [];
+    public Exception? GetAllEntriesWillThrow { get; set; } = null;
+    public bool GetAllEntriesCalled { get; private set; } = false;
     public Exception? AddEntryWillThrow { get; set; } = null;
     public bool AddEntryCalled { get; private set; } = false;
     public Exception? DeleteEntryWillThrow { get; set; } = null;
     public bool DeleteEntryCalled { get; private set; } = false;
-    public bool GetAllEntriesCalled { get; private set; } = false;
+    public Exception? UpdateEntryWillThrow { get; set; } = null;
+    public bool UpdateEntryCalled { get; private set; } = false;
 
     public FakePhonebookEntryService() : base(new EmptyPhonebookRepository()) { }
 
-public override void AddEntry(PhonebookEntry entry)
+    public override IEnumerable<PhonebookEntry> GetAllEntries()
+    {
+        GetAllEntriesCalled = true;
+
+        return Entries.AsEnumerable();
+    }
+
+    public override void AddEntry(PhonebookEntry entry)
     {
         AddEntryCalled = true;
 
@@ -31,10 +41,12 @@ public override void AddEntry(PhonebookEntry entry)
             throw DeleteEntryWillThrow;
     }
 
-    public override IEnumerable<PhonebookEntry> GetAllEntries()
+    public override void UpdateEntry(PhonebookEntry oldEntry, PhonebookEntry newEntry)
     {
-        GetAllEntriesCalled = true;
+        UpdateEntryCalled = true;
 
-        return Entries.AsEnumerable();
+        if (UpdateEntryWillThrow != null)
+            throw UpdateEntryWillThrow;
     }
+
 }

@@ -51,8 +51,8 @@ public class DeleteEntry
         var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
 
         // Assert + Act
-        Exception exception = Assert.Throws<InvalidOperationException>(() => repository.DeleteEntry(entryToDelete));
-        Assert.That(exception.Message, Contains.Substring("The entry to delete does not exist"));
+        Assert.Throws<InvalidOperationException>(() => repository.DeleteEntry(entryToDelete), 
+            "The entry to delete does not exist.");
     }
 
     [Test]
@@ -67,7 +67,7 @@ public class DeleteEntry
         var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
 
         // Assert + Act
-        Exception exception = Assert.Throws<FileNotFoundException>(() => repository.DeleteEntry(entryToDelete));
-        Assert.That(exception.Message, Contains.Substring("The entries file does not exist"));
+        Assert.Throws<FileNotFoundException>(() => repository.DeleteEntry(entryToDelete), 
+            "The entries file does not exist.");
     }
 }

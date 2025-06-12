@@ -6,7 +6,7 @@ namespace MVPPhonebookApp.Presenters.UnitTests.Fakes
 {
     public class EmptyPhonebookRepository : IPhonebookRepository
     {
-        public IEnumerable<PhonebookEntry> GetAllEntries() => Enumerable.Empty<PhonebookEntry>();
+        public IEnumerable<PhonebookEntry> GetAllEntries() => [];
 
         public void AddEntry(PhonebookEntry entry) { }
 

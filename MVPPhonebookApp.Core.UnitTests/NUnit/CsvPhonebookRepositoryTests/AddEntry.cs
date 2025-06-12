@@ -71,7 +71,7 @@ public class AddEntry
         var entryToAdd = new PhonebookEntry("Alice Johnson", "5551234567");
 
         // Assert + Act
-        Exception exception = Assert.Throws<FileNotFoundException>(() => repository.AddEntry(entryToAdd));
-        Assert.That(exception.Message, Contains.Substring("The entries file does not exist"));
+        Assert.Throws<FileNotFoundException>(() => repository.AddEntry(entryToAdd), 
+            "The entries file does not exist.");
     }
 }

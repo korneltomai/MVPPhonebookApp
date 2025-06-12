@@ -16,12 +16,20 @@ public class PhonebookEntryService
     {
         return _repository!.GetAllEntries();
     }
-    public virtual void DeleteEntry(PhonebookEntry entry)
-    {
-        _repository!.DeleteEntry(entry);
-    }
+
     public virtual void AddEntry(PhonebookEntry entry)
     {
         _repository!.AddEntry(entry);
     }
+
+    public virtual void DeleteEntry(PhonebookEntry entry)
+    {
+        _repository!.DeleteEntry(entry);
+    }
+
+    public virtual void UpdateEntry(PhonebookEntry oldEntry, PhonebookEntry newEntry)
+    {
+        _repository!.UpdateEntry(oldEntry, newEntry);
+    }
+
 }
