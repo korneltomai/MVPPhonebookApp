@@ -97,6 +97,29 @@ public class CsvPhonebookRepository : IPhonebookRepository
 
     public void UpdateEntry(PhonebookEntry oldEntry, PhonebookEntry newEntry)
     {
+        if (!_fileSystem.FileExists(_filePath))
+            throw new FileNotFoundException("The entries file does not exist.");
 
+        List<PhonebookEntry> entries = GetAllEntries().ToList();
+
+        if (entries.Any(e => e.Name == newEntry.Name && e.PhoneNumber == newEntry.PhoneNumber))
+            throw new InvalidOperationException("An entry with the same values already exists.");
+        else if (entries.Any(e => e.Name == newEntry.Name))
+            throw new InvalidOperationException("An entry with the same name already exists.");
+        else if (entries.Any(e => e.PhoneNumber == newEntry.PhoneNumber))
+            throw new InvalidOperationException("An entry with the same phone number already exists.");
+
+        int index = entries.FindIndex(e => e.Name == oldEntry.Name && e.PhoneNumber == oldEntry.PhoneNumber);
+        if (index == -1)
+            throw new InvalidOperationException("The entry to update does not exist.");
+        entries[index] = newEntry;
+
+        using var stream = _fileSystem.CreateFile(_filePath);
+        using var writer = new StreamWriter(stream, leaveOpen: true);
+
+        foreach (var e in entries)
+        {
+            writer.WriteLine($"{e.Name},{e.PhoneNumber}");
+        }
     }
 }

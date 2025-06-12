@@ -29,9 +29,9 @@ public class DeleteEntry
         // Act
         repository.DeleteEntry(entryToDelete);
 
+        // Assert
         var entries = repository.GetAllEntries().ToList();
 
-        // Assert
         Assert.That(expectedEntries.Count, Is.EqualTo(entries.Count));
         Assert.That(entries, Has.All.Matches<PhonebookEntry>(entry =>
             expectedEntries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber)
