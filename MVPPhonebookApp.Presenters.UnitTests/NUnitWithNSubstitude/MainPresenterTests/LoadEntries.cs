@@ -1,9 +1,9 @@
 ﻿using NSubstitute;
 using MVPPhonebookApp.Core.Models;
-using MVPPhonebookApp.Core.Repository;
 using MVPPhonebookApp.Presenters.Presenters;
 using MVPPhonebookApp.Presenters.Views;
 using MVPPhonebookApp.Core.Services;
+using MVPPhonebookApp.Presenters.UnitTests.Fakes;
 
 namespace MVPPhonebookApp.Presenters.UnitTests.NUnitWithNSubstitude.MainPresenterTests;
 
@@ -15,7 +15,7 @@ public class LoadEntries
     {
         // Arrange
         var stubMainView = Substitute.For<IMainView>();
-        var mockPhonebookEntryService = Substitute.For<IPhonebookEntryService>();
+        var mockPhonebookEntryService = Substitute.For<PhonebookEntryService>(new EmptyPhonebookRepository());
         var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService);
 
         // Act  
@@ -30,7 +30,7 @@ public class LoadEntries
     {
         // Arrange
         var mockMainView = Substitute.For<IMainView>();
-        var stubPhonebookEntryService = Substitute.For<IPhonebookEntryService>();
+        var stubPhonebookEntryService = Substitute.For<PhonebookEntryService>(new EmptyPhonebookRepository());
         stubPhonebookEntryService.GetAllEntries().Returns(_ =>
             [
                 new PhonebookEntry("John Doe", "123456789"),

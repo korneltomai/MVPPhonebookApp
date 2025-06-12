@@ -6,9 +6,9 @@ namespace MVPPhonebookApp.Presenters.Presenters;
 public class MainPresenter
 {
     private readonly IMainView _view;
-    private readonly IPhonebookEntryService _phonebookEntryService;
+    private readonly PhonebookEntryService _phonebookEntryService;
 
-    public MainPresenter(IMainView view, IPhonebookEntryService phonebookEntryService)
+    public MainPresenter(IMainView view, PhonebookEntryService phonebookEntryService)
     {
         _view = view;
         _phonebookEntryService = phonebookEntryService;

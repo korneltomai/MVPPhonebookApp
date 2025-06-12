@@ -72,7 +72,7 @@ public class DeleteSelectedEntry
             ]
         };
         mockMainView.SelectedEntry = mockMainView.Entries.First();
-        var stubPhonebookEntryService = new PhonebookEntryService();
+        var stubPhonebookEntryService = new FakePhonebookEntryService();
         var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService);
 
         var expectedEntries = new List<PhonebookEntry>
