@@ -27,9 +27,9 @@ public class AddEntry
     public void WhenRepositoryThrows_ThrowsExceptionFurther()
     {
         // Arrange
-        var mockRepository = new FakePhonebookRepository();
-        mockRepository.AddEntryWillThrow = new Exception("Fake exception");
-        var service = new PhonebookEntryService(mockRepository);
+        var stubRepository = new FakePhonebookRepository();
+        stubRepository.AddEntryWillThrow = new Exception("Fake exception");
+        var service = new PhonebookEntryService(stubRepository);
 
         var entry = new PhonebookEntry("Fake Entry", "123456789");
 
