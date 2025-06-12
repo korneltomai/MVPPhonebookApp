@@ -6,7 +6,7 @@ using MVPPhonebookApp.Presenters.UnitTests.Fakes;
 namespace MVPPhonebookApp.Presenters.UnitTests.NUnit.MainPresenterTests;
 
 [TestFixture]
-public class DeleteSelectedEntry
+public class OnDeleteEntryClicked
 {
     [Test]
     public void WhenSelectedEntryIsNotNull_CallsDeleteEntryFromService()
@@ -24,6 +24,7 @@ public class DeleteSelectedEntry
 
         // Assert
         Assert.That(mockPhonebookEntryService.DeleteEntryCalled, Is.True);
+        Assert.That(mockPhonebookEntryService.DeleteEntryParameter, Is.EqualTo(stubMainView.SelectedEntry));
     }
 
     [Test]

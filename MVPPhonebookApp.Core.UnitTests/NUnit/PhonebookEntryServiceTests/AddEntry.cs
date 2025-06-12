@@ -21,6 +21,7 @@ public class AddEntry
 
         // Assert
         Assert.That(mockRepository.AddEntryCalled, Is.True);
+        Assert.That(mockRepository.AddEntryParameter, Is.EqualTo(entry));
     }
 
     public void WhenRepositoryThrows_ThrowsExceptionFurther()

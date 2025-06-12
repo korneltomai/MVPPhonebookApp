@@ -21,14 +21,15 @@ public class DeleteEntry
 
         // Assert
         Assert.That(mockRepository.DeleteEntryCalled, Is.True);
+        Assert.That(mockRepository.DeleteEntryParameter, Is.EqualTo(entry));
     }
 
     public void WhenRepositoryThrows_ThrowsExceptionFurther()
     {
         // Arrange
-        var mockRepository = new FakePhonebookRepository();
-        mockRepository.DeleteEntryWillThrow = new Exception("Fake exception");
-        var service = new PhonebookEntryService(mockRepository);
+        var stubRepository = new FakePhonebookRepository();
+        stubRepository.DeleteEntryWillThrow = new Exception("Fake exception");
+        var service = new PhonebookEntryService(stubRepository);
 
         var entry = new PhonebookEntry("Fake Entry", "123456789");
 

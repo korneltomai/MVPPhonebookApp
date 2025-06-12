@@ -1,6 +1,5 @@
 ﻿using NSubstitute;
 using MVPPhonebookApp.Core.Models;
-using MVPPhonebookApp.Core.Repository;
 using MVPPhonebookApp.Presenters.Presenters;
 using MVPPhonebookApp.Presenters.Views;
 using MVPPhonebookApp.Core.Services;
@@ -10,14 +9,14 @@ using MVPPhonebookApp.Presenters.Services;
 namespace MVPPhonebookApp.Presenters.UnitTests.NUnitWithNSubstitude.MainPresenterTests;
 
 [TestFixture]
-public class DeleteSelectedEntry
+public class OnDeleteEntryClicked
 {
     [Test]
     public void WhenSelectedEntryIsNotNull_CallsDeleteEntryFromService()
     {
         // Arrange
         var stubMainView = Substitute.For<IMainView>();
-        stubMainView.SelectedEntry.Returns(_ => new PhonebookEntry("Fake Entry", "123456789"));
+        stubMainView.SelectedEntry.Returns(new PhonebookEntry("Fake Entry", "123456789"));
         var mockPhonebookEntryService = Substitute.For<PhonebookEntryService>(new EmptyPhonebookRepository());
         var stubAddOrEditDialogService = Substitute.For<IAddOrEditDialogService>();
         var mainPresenter = new MainPresenter(stubMainView, mockPhonebookEntryService, stubAddOrEditDialogService);
@@ -26,7 +25,7 @@ public class DeleteSelectedEntry
         stubMainView.DeleteEntryClicked += Raise.Event();
 
         // Assert
-        mockPhonebookEntryService.Received().DeleteEntry(Arg.Any<PhonebookEntry>());
+        mockPhonebookEntryService.Received().DeleteEntry(stubMainView.SelectedEntry!);
     }
 
     [Test]
@@ -36,7 +35,7 @@ public class DeleteSelectedEntry
         var mockMainView = Substitute.For<IMainView>();
         mockMainView.SelectedEntry.Returns(_ => new PhonebookEntry("Fake Entry", "123456789"));
         var stubPhonebookEntryService = Substitute.For<PhonebookEntryService>(new EmptyPhonebookRepository());
-        stubPhonebookEntryService.When(r => r.DeleteEntry(Arg.Any<PhonebookEntry>()))
+        stubPhonebookEntryService.When(s => s.DeleteEntry(Arg.Any<PhonebookEntry>()))
             .Do(info => { throw new Exception("Fake exception"); });
         var stubAddOrEditDialogService = Substitute.For<IAddOrEditDialogService>();
         var mainPresenter = new MainPresenter(mockMainView, stubPhonebookEntryService, stubAddOrEditDialogService);

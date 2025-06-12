@@ -24,11 +24,9 @@ public class GetAllEntries
     public void WhenRepositoryThrows_ThrowsExceptionFurther()
     {
         // Arrange
-        var mockRepository = new FakePhonebookRepository();
-        mockRepository.GetAllEntriesWillThrow = new Exception("Fake exception");
-        var service = new PhonebookEntryService(mockRepository);
-
-        var entry = new PhonebookEntry("Fake Entry", "123456789");
+        var stubRepository = new FakePhonebookRepository();
+        stubRepository.GetAllEntriesWillThrow = new Exception("Fake exception");
+        var service = new PhonebookEntryService(stubRepository);
 
         // Act + Assert
         Assert.Throws<Exception>(() => service.GetAllEntries(), "Fake exception");

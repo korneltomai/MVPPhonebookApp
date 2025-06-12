@@ -6,15 +6,18 @@ namespace MVPPhonebookApp.Presenters.UnitTests.Fakes;
 
 public class FakePhonebookEntryService : PhonebookEntryService
 {
-    public List<PhonebookEntry> Entries { get; set; } = [];
+    public IEnumerable<PhonebookEntry> Entries { get; set; } = [];
     public Exception? GetAllEntriesWillThrow { get; set; } = null;
     public bool GetAllEntriesCalled { get; private set; } = false;
     public Exception? AddEntryWillThrow { get; set; } = null;
     public bool AddEntryCalled { get; private set; } = false;
+    public PhonebookEntry? AddEntryParameter { get; private set; }
     public Exception? DeleteEntryWillThrow { get; set; } = null;
     public bool DeleteEntryCalled { get; private set; } = false;
+    public PhonebookEntry? DeleteEntryParameter { get; private set; }
     public Exception? UpdateEntryWillThrow { get; set; } = null;
     public bool UpdateEntryCalled { get; private set; } = false;
+    public (PhonebookEntry? oldEntry, PhonebookEntry? newEntry) UpdateEntryParameters { get; private set; }
 
     public FakePhonebookEntryService() : base(new EmptyPhonebookRepository()) { }
 
@@ -22,7 +25,7 @@ public class FakePhonebookEntryService : PhonebookEntryService
     {
         GetAllEntriesCalled = true;
 
-        return Entries.AsEnumerable();
+        return Entries;
     }
 
     public override void AddEntry(PhonebookEntry entry)
@@ -31,6 +34,8 @@ public class FakePhonebookEntryService : PhonebookEntryService
 
         if (AddEntryWillThrow != null)
             throw AddEntryWillThrow;
+
+        AddEntryParameter = entry;
     }
 
     public override void DeleteEntry(PhonebookEntry entry)
@@ -39,6 +44,8 @@ public class FakePhonebookEntryService : PhonebookEntryService
 
         if (DeleteEntryWillThrow != null)
             throw DeleteEntryWillThrow;
+
+        DeleteEntryParameter = entry;
     }
 
     public override void UpdateEntry(PhonebookEntry oldEntry, PhonebookEntry newEntry)
@@ -47,6 +54,7 @@ public class FakePhonebookEntryService : PhonebookEntryService
 
         if (UpdateEntryWillThrow != null)
             throw UpdateEntryWillThrow;
-    }
 
+        UpdateEntryParameters = (oldEntry, newEntry);
+    }
 }

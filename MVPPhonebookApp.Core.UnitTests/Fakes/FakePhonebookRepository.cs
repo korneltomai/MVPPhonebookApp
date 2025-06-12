@@ -9,11 +9,13 @@ namespace MVPPhonebookApp.Core.UnitTests.Fakes
         public bool GetAllEntriesCalled { get; private set; } = false;
         public Exception? AddEntryWillThrow { get; set; } = null;
         public bool AddEntryCalled { get; private set; } = false;
+        public PhonebookEntry? AddEntryParameter { get; private set; }
         public Exception? DeleteEntryWillThrow { get; set; } = null;
         public bool DeleteEntryCalled { get; private set; } = false;
+        public PhonebookEntry? DeleteEntryParameter { get; private set; }
         public Exception? UpdateEntryWillThrow { get; set; } = null;
         public bool UpdateEntryCalled { get; private set; } = false;
-
+        public (PhonebookEntry? oldEntry, PhonebookEntry? newEntry) UpdateEntryParameters { get; private set; }
 
         public IEnumerable<PhonebookEntry> GetAllEntries()
         {
@@ -28,6 +30,8 @@ namespace MVPPhonebookApp.Core.UnitTests.Fakes
 
             if (AddEntryWillThrow != null)
                 throw AddEntryWillThrow;
+
+            AddEntryParameter = entry;
         }
 
         public void DeleteEntry(PhonebookEntry entry)
@@ -36,6 +40,8 @@ namespace MVPPhonebookApp.Core.UnitTests.Fakes
 
             if (DeleteEntryWillThrow != null)
                 throw DeleteEntryWillThrow;
+
+            DeleteEntryParameter = entry;
         }
 
         public void UpdateEntry(PhonebookEntry oldEntry, PhonebookEntry newEntry)
@@ -44,6 +50,8 @@ namespace MVPPhonebookApp.Core.UnitTests.Fakes
 
             if (UpdateEntryWillThrow != null)
                 throw UpdateEntryWillThrow;
+
+            UpdateEntryParameters = (oldEntry, newEntry);
         }
     }
 }
