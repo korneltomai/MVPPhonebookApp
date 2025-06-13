@@ -9,7 +9,7 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnitWithNSubstitude.CsvPhonebookReposi
 public class DeleteEntry
 {
     [Test]
-    public void WhenEntryExists_DeletesEntry()
+    public void WhenFileExists_DeletesEntry()
     {
         // Arrange
         var stubFileSystem = Substitute.For<IFileSystem>();
@@ -39,23 +39,6 @@ public class DeleteEntry
     }
 
     [Test]
-    public void WhenEntryDoesNotExist_ThrowsInvalidOperationException()
-    {
-        var stubFileSystem = Substitute.For<IFileSystem>();
-        stubFileSystem.FileExists(Arg.Any<string>()).Returns(true);
-        string fileContent = "John Doe,123456789\r\nJane Smith,987654321";
-        stubFileSystem.OpenRead(Arg.Any<string>()).Returns(_ => new MemoryStream(System.Text.Encoding.UTF8.GetBytes(fileContent)));
-
-        var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
-
-        var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
-
-        // Assert + Act
-        Assert.Throws<InvalidOperationException>(() => repository.DeleteEntry(entryToDelete), 
-            "The entry to delete does not exist.");
-    }
-
-    [Test]
     public void WhenFileDoesNotExist_ThrowsFileNotFoundException()
     {
         // Arrange
@@ -64,7 +47,7 @@ public class DeleteEntry
 
         var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
 
-        var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
+        var entryToDelete = new PhonebookEntry("John Doe", "123456789");
 
         // Assert + Act
         Assert.Throws<FileNotFoundException>(() => repository.DeleteEntry(entryToDelete), 

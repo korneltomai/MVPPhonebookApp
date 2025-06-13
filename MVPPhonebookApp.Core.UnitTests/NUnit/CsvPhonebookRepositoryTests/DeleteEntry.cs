@@ -8,7 +8,7 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnit.CsvPhonebookRepositoryTests;
 public class DeleteEntry
 {
     [Test]
-    public void WhenEntryExists_DeletesEntry()
+    public void WhenFileExists_DeletesEntry()
     {
         // Arrange
         var stubFileSystem = new FakeFileSystem
@@ -34,24 +34,6 @@ public class DeleteEntry
         Assert.That(entries, Has.All.Matches<PhonebookEntry>(entry =>
             expectedEntries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber)
         ));
-    }
-
-    [Test]
-    public void WhenEntryDoesNotExist_ThrowsInvalidOperationException()
-    {
-        // Arrange
-        var stubFileSystem = new FakeFileSystem
-        {
-            DoesFileExists = true,
-            FileContent = "John Doe,123456789\r\nJane Smith,987654321"
-        };
-        var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
-
-        var entryToDelete = new PhonebookEntry("Does not exist", "999999999");
-
-        // Assert + Act
-        Assert.Throws<InvalidOperationException>(() => repository.DeleteEntry(entryToDelete), 
-            "The entry to delete does not exist.");
     }
 
     [Test]

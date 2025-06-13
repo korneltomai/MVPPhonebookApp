@@ -56,9 +56,6 @@ public class CsvPhonebookRepository : IPhonebookRepository
 
         List<PhonebookEntry> entries = GetAllEntries().ToList();
 
-        if (!entries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber))
-            throw new InvalidOperationException("The entry to delete does not exist.");
-
         entries.RemoveAll(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber);
 
         using var stream = _fileSystem.CreateFile(_filePath);
@@ -76,13 +73,6 @@ public class CsvPhonebookRepository : IPhonebookRepository
            throw new FileNotFoundException("The entries file does not exist.");
 
         List<PhonebookEntry> entries = GetAllEntries().ToList();
-
-        if (entries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber))
-            throw new InvalidOperationException("An entry with the same values already exists.");
-        else if (entries.Any(e => e.Name == entry.Name))
-            throw new InvalidOperationException("An entry with the same name already exists.");
-        else if (entries.Any(e => e.PhoneNumber == entry.PhoneNumber))
-            throw new InvalidOperationException("An entry with the same phone number already exists.");
 
         entries.Add(entry);
 
@@ -102,17 +92,7 @@ public class CsvPhonebookRepository : IPhonebookRepository
 
         List<PhonebookEntry> entries = GetAllEntries().ToList();
 
-        if (entries.Any(e => e.Name == newEntry.Name && e.Name != oldEntry.Name && 
-                             e.PhoneNumber == newEntry.PhoneNumber && e.PhoneNumber != oldEntry.PhoneNumber))
-            throw new InvalidOperationException("An entry with the same values already exists.");
-        else if (entries.Any(e => e.Name == newEntry.Name && e.Name != oldEntry.Name))
-            throw new InvalidOperationException("An entry with the same name already exists.");
-        else if (entries.Any(e => e.PhoneNumber == newEntry.PhoneNumber && e.PhoneNumber != oldEntry.PhoneNumber))
-            throw new InvalidOperationException("An entry with the same phone number already exists.");
-
         int index = entries.FindIndex(e => e.Name == oldEntry.Name && e.PhoneNumber == oldEntry.PhoneNumber);
-        if (index == -1)
-            throw new InvalidOperationException("The entry to update does not exist.");
         entries[index] = newEntry;
 
         using var stream = _fileSystem.CreateFile(_filePath);
@@ -123,4 +103,13 @@ public class CsvPhonebookRepository : IPhonebookRepository
             writer.WriteLine($"{e.Name},{e.PhoneNumber}");
         }
     }
+
+    public bool EntryExists(PhonebookEntry entry) =>
+        GetAllEntries().Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber);
+
+    public bool EntryExistsByName(string name) =>
+        GetAllEntries().Any(e => e.Name == name);
+
+    public bool EntryExistsByPhoneNumber(string phoneNumber) =>
+        GetAllEntries().Any(e => e.PhoneNumber == phoneNumber);
 }

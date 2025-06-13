@@ -8,6 +8,7 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnit.PhonebookEntryServiceTests;
 [TestFixture]
 public class GetAllEntries
 {
+    [Test]
     public void WhenCalled_CallsGetAllEntriesFromRepository()
     {
         // Arrange
@@ -21,6 +22,7 @@ public class GetAllEntries
         Assert.That(mockRepository.GetAllEntriesCalled, Is.True);
     }
 
+    [Test]
     public void WhenRepositoryThrows_ThrowsExceptionFurther()
     {
         // Arrange
@@ -29,6 +31,7 @@ public class GetAllEntries
         var service = new PhonebookEntryService(stubRepository);
 
         // Act + Assert
-        Assert.Throws<Exception>(() => service.GetAllEntries(), "Fake exception");
+        Assert.Throws<Exception>(() => service.GetAllEntries(), 
+            "Fake exception");
     }
 }

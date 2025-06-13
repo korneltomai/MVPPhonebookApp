@@ -8,22 +8,24 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnit.PhonebookEntryServiceTests;
 [TestFixture]
 public class AddEntry
 {
-    public void WhenCalled_CallsAddEntryFromRepository()
+    [Test]
+    public void WhenCalledWithValidEntries_CallsAddEntryFromRepository()
     {
         // Arrange
         var mockRepository = new FakePhonebookRepository();
         var service = new PhonebookEntryService(mockRepository);
 
-        var entry = new PhonebookEntry("Fake Entry", "123456789");
+        var entryToAdd = new PhonebookEntry("Fake Entry", "333333333");
 
         // Act
-        service.AddEntry(entry);
+        service.AddEntry(entryToAdd);
 
         // Assert
         Assert.That(mockRepository.AddEntryCalled, Is.True);
-        Assert.That(mockRepository.AddEntryParameter, Is.EqualTo(entry));
+        Assert.That(mockRepository.AddEntryParameter, Is.EqualTo(entryToAdd));
     }
 
+    [Test]
     public void WhenRepositoryThrows_ThrowsExceptionFurther()
     {
         // Arrange
@@ -31,9 +33,62 @@ public class AddEntry
         stubRepository.AddEntryWillThrow = new Exception("Fake exception");
         var service = new PhonebookEntryService(stubRepository);
 
-        var entry = new PhonebookEntry("Fake Entry", "123456789");
+        var entryToAdd = new PhonebookEntry("Fake Entry", "123456789");
 
         // Act + Assert
-        Assert.Throws<Exception>(() => service.AddEntry(entry), "Fake exception");
+        Assert.Throws<Exception>(() => service.AddEntry(entryToAdd), 
+            "Fake exception");
+    }
+
+    [Test]
+    public void WhenRepositoryAlreadyContainsEntry_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var stubRepository = new FakePhonebookRepository();
+        stubRepository.Entries =
+            [
+                new PhonebookEntry("John Doe", "123456789")
+            ];
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToAdd = new PhonebookEntry("John Doe", "123456789");
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd), "An entry with the same values already exists.");
+    }
+
+    [Test]
+    public void WhenRepositoryAlreadyContainsEntryWithSameName_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var stubRepository = new FakePhonebookRepository();
+        stubRepository.Entries =
+            [
+                new PhonebookEntry("John Doe", "123456789")
+            ];
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToAdd = new PhonebookEntry("John Doe", "987654321");
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd), "An entry with the same name already exists.");
+    }
+
+    [Test]
+    public void WhenRepositoryAlreadyContainsEntryWithSamePhoneNumber_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var stubRepository = new FakePhonebookRepository();
+        stubRepository.Entries =
+            [
+                new PhonebookEntry("John Doe", "123456789")
+            ];
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToAdd = new PhonebookEntry("Jane Smith", "123456789");
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd), 
+            "An entry with the same phone number already exists.");
     }
 }

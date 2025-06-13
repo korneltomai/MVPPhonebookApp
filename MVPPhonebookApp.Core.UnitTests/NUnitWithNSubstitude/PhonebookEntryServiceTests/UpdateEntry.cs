@@ -9,14 +9,17 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnitWithNSubstitude.PhonebookEntryServ
 [TestFixture]
 public class UpdateEntry
 {
-    public void WhenCalled_CallsUpdateEntryFromRepository()
+    [Test]
+    public void WhenCalledWithValidEntries_CallsUpdateEntryFromRepository()
     {
         // Arrange
         var mockRepository = Substitute.For<IPhonebookRepository>();
-        var service = Substitute.For<PhonebookEntryService>(mockRepository);
+        var service = new PhonebookEntryService(mockRepository);
 
-        var oldEntry = new PhonebookEntry("Fake Entry", "123456789");
-        var newEntry = new PhonebookEntry("Another Fake Entry", "987654321");
+        var oldEntry = new PhonebookEntry("John Doe", "123456789");
+        var newEntry = new PhonebookEntry("Jane Smith", "987654321");
+
+        mockRepository.EntryExists(oldEntry).Returns(true);
 
         // Act
         service.UpdateEntry(oldEntry, newEntry);
@@ -25,18 +28,75 @@ public class UpdateEntry
         mockRepository.Received().UpdateEntry(oldEntry, newEntry);
     }
 
+    [Test]
     public void WhenRepositoryThrows_ThrowsExceptionFurther()
     {
         // Arrange
         var stubRepository = Substitute.For<IPhonebookRepository>();
         stubRepository.When(r => r.UpdateEntry(Arg.Any<PhonebookEntry>(), Arg.Any<PhonebookEntry>()))
             .Do(info => { throw new Exception("Fake exception"); });
-        var service = Substitute.For<PhonebookEntryService>(stubRepository);
+        var service = new PhonebookEntryService(stubRepository);
 
-        var oldEntry = new PhonebookEntry("Fake Entry", "123456789");
-        var newEntry = new PhonebookEntry("Another Fake Entry", "987654321");
+        var oldEntry = new PhonebookEntry("John Doe", "123456789");
+        var newEntry = new PhonebookEntry("Jane Smith", "987654321");
+
+        stubRepository.EntryExists(oldEntry).Returns(true);
 
         // Act + Assert
         Assert.Throws<Exception>(() => service.UpdateEntry(oldEntry, newEntry), "Fake exception");
+    }
+
+    [Test]
+    public void WhenRepositoryAlreadyContainsEntry_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var stubRepository = Substitute.For<IPhonebookRepository>();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var oldEntry = new PhonebookEntry("John Doe", "123456789");
+        var newEntry = new PhonebookEntry("Jane Smith", "987654321");
+
+        stubRepository.EntryExists(oldEntry).Returns(true);
+        stubRepository.EntryExists(newEntry).Returns(true);
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.UpdateEntry(oldEntry, newEntry),
+            "An entry with the same values already exists.");
+    }
+
+    [Test]
+    public void WhenRepositoryAlreadyContainsEntryWithSameName_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var stubRepository = Substitute.For<IPhonebookRepository>();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var oldEntry = new PhonebookEntry("John Doe", "123456789");
+        var newEntry = new PhonebookEntry("Jane Smith", "987654321");
+
+        stubRepository.EntryExists(oldEntry).Returns(true);
+        stubRepository.EntryExistsByName(newEntry.Name).Returns(true);
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.UpdateEntry(oldEntry, newEntry),
+           "An entry with the same name already exists.");
+    }
+
+    [Test]
+    public void WhenRepositoryAlreadyContainsEntryWithSamePhoneNumber_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var stubRepository = Substitute.For<IPhonebookRepository>();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var oldEntry = new PhonebookEntry("John Doe", "123456789");
+        var newEntry = new PhonebookEntry("Jane Smith", "987654321");
+
+        stubRepository.EntryExists(oldEntry).Returns(true);
+        stubRepository.EntryExistsByPhoneNumber(newEntry.PhoneNumber).Returns(true);
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.UpdateEntry(oldEntry, newEntry),
+           "An entry with the same phone number already exists.");
     }
 }

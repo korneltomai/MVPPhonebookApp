@@ -13,5 +13,8 @@ namespace MVPPhonebookApp.Presenters.UnitTests.Fakes
         public void DeleteEntry(PhonebookEntry entry) { }
 
         public void UpdateEntry(PhonebookEntry oldEntry, PhonebookEntry newEntry) { }
+        public bool EntryExists(PhonebookEntry entry) => false;
+        public bool EntryExistsByName(string name) => false;
+        public bool EntryExistsByPhoneNumber(string phoneNumber) => false;
     }
 }

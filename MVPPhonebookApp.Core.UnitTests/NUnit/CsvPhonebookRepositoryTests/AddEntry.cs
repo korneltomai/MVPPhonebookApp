@@ -8,7 +8,7 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnit.CsvPhonebookRepositoryTests;
 public class AddEntry
 {
     [Test]
-    public void WhenFileExistsAndDoesNotContainEntry_AddsEntry()
+    public void WhenFileExists_AddsEntry()
     {
         // Arrange
         var stubFileSystem = new FakeFileSystem
@@ -36,26 +36,6 @@ public class AddEntry
         Assert.That(entries, Has.All.Matches<PhonebookEntry>(entry =>
             expectedEntries.Any(e => e.Name == entry.Name && e.PhoneNumber == entry.PhoneNumber)
         ));
-    }
-
-    [TestCase("John Doe", "333333333")]
-    [TestCase("Does not exist yet", "123456789")]
-    [TestCase("John Doe", "123456789")]
-    public void WhenFileExistsAndAlreadyContainsSimilarEntry_ThrowsInvalidOperationException(string name, string phoneNumber)
-    {
-        // Arrange
-        var stubFileSystem = new FakeFileSystem
-        {
-            DoesFileExists = true,
-            FileContent = "John Doe,123456789\r\nJane Smith,987654321\r\nAlice Johnson,5551234567"
-        };
-        var repository = new CsvPhonebookRepository(stubFileSystem, "fakePath.csv");
-
-        var entryToAdd = new PhonebookEntry(name, phoneNumber);
-
-        // Assert + Act
-        Exception exception = Assert.Throws<InvalidOperationException>(() => repository.AddEntry(entryToAdd));
-        Assert.That(exception.Message, Does.Contain("An entry with the same").And.Contain("already exists"));
     }
 
     [Test]

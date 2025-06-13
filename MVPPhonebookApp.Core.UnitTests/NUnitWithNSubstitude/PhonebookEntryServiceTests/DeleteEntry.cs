@@ -2,38 +2,58 @@
 using MVPPhonebookApp.Core.Models;
 using MVPPhonebookApp.Core.Repository;
 using MVPPhonebookApp.Core.Services;
+using MVPPhonebookApp.Core.UnitTests.Fakes;
 
 namespace MVPPhonebookApp.Core.UnitTests.NUnitWithNSubstitude.PhonebookEntryServiceTests;
 
 [TestFixture]
 public class DeleteEntry
 {
-    public void WhenCalled_CallsAddEntryFromRepository()
+    [Test]
+    public void WhenCalledWithValidEntries_CallsAddEntryFromRepository()
     {
         // Arrange
         var mockRepository = Substitute.For<IPhonebookRepository>();
-        var service = Substitute.For<PhonebookEntryService>(mockRepository);
+        mockRepository.EntryExists(Arg.Any<PhonebookEntry>()).Returns(true);
+        var service = new PhonebookEntryService(mockRepository);
 
-        var entry = new PhonebookEntry("Fake Entry", "123456789");
+        var entryToDelete = new PhonebookEntry("John Doe", "123456789");
 
         // Act
-        service.AddEntry(entry);
+        service.DeleteEntry(entryToDelete);
 
         // Assert
-        mockRepository.Received().DeleteEntry(entry);
+        mockRepository.Received().DeleteEntry(entryToDelete);
     }
 
+    [Test]
     public void WhenRepositoryThrows_ThrowsExceptionFurther()
     {
         // Arrange
         var stubRepository = Substitute.For<IPhonebookRepository>();
-        stubRepository.When(r => r.AddEntry(Arg.Any<PhonebookEntry>()))
+        stubRepository.EntryExists(Arg.Any<PhonebookEntry>()).Returns(true);
+        stubRepository.When(r => r.DeleteEntry(Arg.Any<PhonebookEntry>()))
             .Do(info => { throw new Exception("Fake exception"); });
-        var service = Substitute.For<PhonebookEntryService>(stubRepository);
+        var service = new PhonebookEntryService(stubRepository);
 
-        var entry = new PhonebookEntry("Fake Entry", "123456789");
+        var entryToDelete = new PhonebookEntry("John Doe", "123456789");
 
         // Act + Assert
-        Assert.Throws<Exception>(() => service.DeleteEntry(entry), "Fake exception");
+        Assert.Throws<Exception>(() => service.DeleteEntry(entryToDelete), 
+            "Fake exception");
+    }
+
+    [Test]
+    public void WhenRepositoryDoesNotContainEntry_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var stubRepository = Substitute.For<IPhonebookRepository>();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToDelete = new PhonebookEntry("John Doe", "123456789");
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.DeleteEntry(entryToDelete),
+            "The entry to delete does not exist.");
     }
 }

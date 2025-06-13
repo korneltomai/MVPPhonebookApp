@@ -7,6 +7,7 @@ namespace MVPPhonebookApp.Core.UnitTests.NUnit.CsvPhonebookRepositoryTests;
 [TestFixture]
 public class GetAllEntries
 {
+    [Test]
     public void WhenFileExists_ReturnsEntries()
     {
         // Arrange
