@@ -42,7 +42,7 @@ public class AddEntry
     }
 
     [Test]
-    public void WhenRepositoryAlreadyContainsEntry_ThrowsInvalidOperationException()
+    public void WhenRepositoryAlreadyContainsEntry_ThrowsValidationException()
     {
         // Arrange
         var stubRepository = new FakePhonebookRepository();
@@ -55,11 +55,12 @@ public class AddEntry
         var entryToAdd = new PhonebookEntry("John Doe", "123456789");
 
         // Assert + Act
-        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd), "An entry with the same values already exists.");
+        Assert.Throws<ValidationException>(() => service.AddEntry(entryToAdd), 
+            "An entry with the same values already exists.");
     }
 
     [Test]
-    public void WhenRepositoryAlreadyContainsEntryWithSameName_ThrowsInvalidOperationException()
+    public void WhenRepositoryAlreadyContainsEntryWithSameName_ThrowsValidationException()
     {
         // Arrange
         var stubRepository = new FakePhonebookRepository();
@@ -72,11 +73,12 @@ public class AddEntry
         var entryToAdd = new PhonebookEntry("John Doe", "987654321");
 
         // Assert + Act
-        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd), "An entry with the same name already exists.");
+        Assert.Throws<ValidationException>(() => service.AddEntry(entryToAdd), 
+            "An entry with the same name already exists.");
     }
 
     [Test]
-    public void WhenRepositoryAlreadyContainsEntryWithSamePhoneNumber_ThrowsInvalidOperationException()
+    public void WhenRepositoryAlreadyContainsEntryWithSamePhoneNumber_ThrowsValidationException()
     {
         // Arrange
         var stubRepository = new FakePhonebookRepository();
@@ -89,13 +91,13 @@ public class AddEntry
         var entryToAdd = new PhonebookEntry("Jane Smith", "123456789");
 
         // Assert + Act
-        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd), 
+        Assert.Throws<ValidationException>(() => service.AddEntry(entryToAdd), 
             "An entry with the same phone number already exists.");
     }
 
     [TestCase("", "123456789")]
     [TestCase("John Doe", "")]
-    public void WhenGetsEntryWithEmptyNameOrPhoneNumber_ThrowsInvalidOperationException(string name, string phoneNumber)
+    public void WhenGetsEntryWithEmptyNameOrPhoneNumber_ThrowsValidationException(string name, string phoneNumber)
     {
         var stubRepository = new FakePhonebookRepository();
         var service = new PhonebookEntryService(stubRepository);
@@ -103,12 +105,12 @@ public class AddEntry
         var entryToAdd = new PhonebookEntry(name, phoneNumber);
 
         // Assert + Act
-        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd),
+        Assert.Throws<ValidationException>(() => service.AddEntry(entryToAdd),
             "Name and phone number cannot be empty.");
     }
 
     [Test]
-    public void WhenGetsEntryWithLongName_ThrowsInvalidOperationException()
+    public void WhenGetsEntryWithLongName_ThrowsValidationException()
     {
         var stubRepository = new FakePhonebookRepository();
         var service = new PhonebookEntryService(stubRepository);
@@ -116,12 +118,12 @@ public class AddEntry
         var entryToAdd = new PhonebookEntry("This is a name that is over 32 characters long", "123456789");
 
         // Assert + Act
-        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd),
+        Assert.Throws<ValidationException>(() => service.AddEntry(entryToAdd),
             "Name cannot exceed 32 characters.");
     }
 
     [Test]
-    public void WhenGetsEntryWithLongPhoneNumber_ThrowsInvalidOperationException()
+    public void WhenGetsEntryWithLongPhoneNumber_ThrowsValidationException()
     {
         var stubRepository = new FakePhonebookRepository();
         var service = new PhonebookEntryService(stubRepository);
@@ -129,7 +131,7 @@ public class AddEntry
         var entryToAdd = new PhonebookEntry("John Doe", "This is a phone number that is over 32 characters long");
 
         // Assert + Act
-        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd),
+        Assert.Throws<ValidationException>(() => service.AddEntry(entryToAdd),
             "Phone number cannot exceed 32 characters.");
     }
 }

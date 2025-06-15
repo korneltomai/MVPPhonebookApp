@@ -20,6 +20,7 @@ public class FakeMainView : IMainView
     {
         ErrorMessage = message;
     }
+
     public void TriggerDeleteEntryClicked()
     {
         DeleteEntryClicked?.Invoke(this, EventArgs.Empty);

@@ -14,10 +14,10 @@ namespace MVPPhonebookApp.Presenters.Presenters
             _view = view;
             _phonebookEntryService = phonebookEntryService;
 
-            _view.SubmitClicked += Submit;
+            _view.SubmitClicked += OnSubmitClicked;
         }
 
-        private void Submit(object? sender, EventArgs e)
+        private void OnSubmitClicked(object? sender, EventArgs e)
         {
             var newEntry = new PhonebookEntry(_view.EntryName, _view.EntryPhoneNumber);
 
@@ -32,7 +32,7 @@ namespace MVPPhonebookApp.Presenters.Presenters
                     _phonebookEntryService.UpdateEntry(_view.Entry, newEntry);
                 }
             }
-            catch (Exception ex) when (ex is InvalidOperationException || ex is FileNotFoundException)
+            catch (Exception ex) when (ex is ValidationException)
             {
                 _view.ShowError(ex.Message);
                 return;
@@ -40,7 +40,6 @@ namespace MVPPhonebookApp.Presenters.Presenters
             catch (Exception ex)
             {
                 _view.ShowError("An unexpected error occurred: " + ex.Message);
-                return;
             }
 
             _view.Close();
