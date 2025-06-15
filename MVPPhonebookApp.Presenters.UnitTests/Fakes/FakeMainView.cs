@@ -25,4 +25,14 @@ public class FakeMainView : IMainView
     {
         DeleteEntryClicked?.Invoke(this, EventArgs.Empty);
     }
+
+    public void TriggerAddEntryClicked()
+    {
+        AddEntryClicked?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void TriggerUpdateEntryClicked()
+    {
+        UpdateEntryClicked?.Invoke(this, EventArgs.Empty);
+    }
 }

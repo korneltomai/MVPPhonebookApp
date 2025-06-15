@@ -7,8 +7,8 @@ public class PhonebookEntryService
 {
     private readonly IPhonebookRepository _repository;
 
-    public event EventHandler<PhonebookEntry>? EntryAdded;
-    public event EventHandler<(PhonebookEntry OldEntry, PhonebookEntry NewEntry)>? EntryUpdated;
+    public virtual event EventHandler<PhonebookEntry>? EntryAdded;
+    public virtual event EventHandler<(PhonebookEntry OldEntry, PhonebookEntry NewEntry)>? EntryUpdated;
 
     public PhonebookEntryService(IPhonebookRepository repository)
     {
@@ -39,7 +39,7 @@ public class PhonebookEntryService
             throw new ValidationException("An entry with the same phone number already exists.");
 
         _repository.AddEntry(entry);
-        EntryAdded?.Invoke(this, entry);
+        OnEntryAdded(entry);
     }
 
     public virtual void UpdateEntry(PhonebookEntry oldEntry, PhonebookEntry newEntry)
@@ -57,6 +57,16 @@ public class PhonebookEntryService
             throw new ValidationException("An entry with the same phone number already exists.");
 
         _repository.UpdateEntry(oldEntry, newEntry);
+        OnEntryUpdated(oldEntry, newEntry);
+    }
+
+    public virtual void OnEntryAdded(PhonebookEntry entry)
+    {
+        EntryAdded?.Invoke(this, entry);
+    }
+
+    public virtual void OnEntryUpdated(PhonebookEntry oldEntry, PhonebookEntry newEntry)
+    {
         EntryUpdated?.Invoke(this, (oldEntry, newEntry));
     }
 
@@ -69,5 +79,7 @@ public class PhonebookEntryService
         if (entry.PhoneNumber.Length > 16)
             throw new ValidationException("Phone number cannot exceed 16 characters.");
     }
+
+
 }
 

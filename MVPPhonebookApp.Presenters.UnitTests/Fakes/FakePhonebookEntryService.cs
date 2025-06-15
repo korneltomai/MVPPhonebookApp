@@ -57,4 +57,14 @@ public class FakePhonebookEntryService : PhonebookEntryService
 
         UpdateEntryParameters = (oldEntry, newEntry);
     }
+
+    public override void OnEntryAdded(PhonebookEntry entry)
+    {
+        base.OnEntryAdded(entry);
+    }
+
+    public override void OnEntryUpdated(PhonebookEntry oldEntry, PhonebookEntry newEntry)
+    {
+        base.OnEntryUpdated(oldEntry, newEntry);
+    }
 }
