@@ -74,7 +74,7 @@ namespace MVPPhonebookApp.Presenters.UnitTests.NUnit.AddOrEditPresenterTests
         }
 
         [Test]
-        public void WhenEntryInViewIsNotNull_CallsUpdateEntryOnService()
+        public void WhenEntryInViewIsNotNull_CallsUpdateEntryFromService()
         {
             // Arrange
             var stubView = new FakeAddOrEditView();
