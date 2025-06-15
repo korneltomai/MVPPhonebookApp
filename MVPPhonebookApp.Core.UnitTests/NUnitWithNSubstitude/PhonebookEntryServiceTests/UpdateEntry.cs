@@ -99,4 +99,44 @@ public class UpdateEntry
         Assert.Throws<InvalidOperationException>(() => service.UpdateEntry(oldEntry, newEntry),
            "An entry with the same phone number already exists.");
     }
+
+    [TestCase("", "123456789")]
+    [TestCase("John Doe", "")]
+    public void WhenGetsEntryWithEmptyNameOrPhoneNumber_ThrowsInvalidOperationException(string name, string phoneNumber)
+    {
+        var stubRepository = Substitute.For<IPhonebookRepository>();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToAdd = new PhonebookEntry(name, phoneNumber);
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd),
+            "Name and phone number cannot be empty.");
+    }
+
+    [Test]
+    public void WhenGetsEntryWithLongName_ThrowsInvalidOperationException()
+    {
+        var stubRepository = Substitute.For<IPhonebookRepository>();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToAdd = new PhonebookEntry("This is a name that is over 32 characters long", "123456789");
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd),
+            "Name cannot exceed 32 characters.");
+    }
+
+    [Test]
+    public void WhenGetsEntryWithLongPhoneNumber_ThrowsInvalidOperationException()
+    {
+        var stubRepository = Substitute.For<IPhonebookRepository>();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToAdd = new PhonebookEntry("John Doe", "This is a phone number that is over 32 characters long");
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd),
+            "Phone number cannot exceed 32 characters.");
+    }
 }

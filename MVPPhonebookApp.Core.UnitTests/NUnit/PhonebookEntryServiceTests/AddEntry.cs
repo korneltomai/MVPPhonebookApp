@@ -2,6 +2,7 @@
 using MVPPhonebookApp.Core.Repository;
 using MVPPhonebookApp.Core.Services;
 using MVPPhonebookApp.Core.UnitTests.Fakes;
+using System.Reflection.Metadata;
 
 namespace MVPPhonebookApp.Core.UnitTests.NUnit.PhonebookEntryServiceTests;
 
@@ -90,5 +91,45 @@ public class AddEntry
         // Assert + Act
         Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd), 
             "An entry with the same phone number already exists.");
+    }
+
+    [TestCase("", "123456789")]
+    [TestCase("John Doe", "")]
+    public void WhenGetsEntryWithEmptyNameOrPhoneNumber_ThrowsInvalidOperationException(string name, string phoneNumber)
+    {
+        var stubRepository = new FakePhonebookRepository();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToAdd = new PhonebookEntry(name, phoneNumber);
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd),
+            "Name and phone number cannot be empty.");
+    }
+
+    [Test]
+    public void WhenGetsEntryWithLongName_ThrowsInvalidOperationException()
+    {
+        var stubRepository = new FakePhonebookRepository();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToAdd = new PhonebookEntry("This is a name that is over 32 characters long", "123456789");
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd),
+            "Name cannot exceed 32 characters.");
+    }
+
+    [Test]
+    public void WhenGetsEntryWithLongPhoneNumber_ThrowsInvalidOperationException()
+    {
+        var stubRepository = new FakePhonebookRepository();
+        var service = new PhonebookEntryService(stubRepository);
+
+        var entryToAdd = new PhonebookEntry("John Doe", "This is a phone number that is over 32 characters long");
+
+        // Assert + Act
+        Assert.Throws<InvalidOperationException>(() => service.AddEntry(entryToAdd),
+            "Phone number cannot exceed 32 characters.");
     }
 }

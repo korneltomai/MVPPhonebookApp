@@ -29,6 +29,8 @@ public class PhonebookEntryService
 
     public virtual void AddEntry(PhonebookEntry entry)
     {
+        ValidateEntry(entry);
+
         if (_repository.EntryExists(entry))
             throw new InvalidOperationException("An entry with the same values already exists.");
         if (_repository.EntryExistsByName(entry.Name))
@@ -42,6 +44,8 @@ public class PhonebookEntryService
 
     public virtual void UpdateEntry(PhonebookEntry oldEntry, PhonebookEntry newEntry)
     {
+        ValidateEntry(newEntry);
+
         if (!_repository.EntryExists(oldEntry))
             throw new InvalidOperationException("The entry to update does not exist.");
         if (newEntry.Name != oldEntry.Name && newEntry.PhoneNumber != oldEntry.PhoneNumber && _repository.EntryExists(newEntry))
@@ -55,5 +59,14 @@ public class PhonebookEntryService
         EntryUpdated?.Invoke(this, (oldEntry, newEntry));
     }
 
+    private void ValidateEntry(PhonebookEntry entry)
+    {
+        if (string.IsNullOrWhiteSpace(entry.Name) || string.IsNullOrWhiteSpace(entry.PhoneNumber))
+            throw new InvalidOperationException("Name and phone number cannot be empty.");
+        if (entry.Name.Length > 32)
+            throw new InvalidOperationException("Name cannot exceed 32 characters.");
+        if (entry.PhoneNumber.Length > 16)
+            throw new InvalidOperationException("Phone number cannot exceed 16 characters.");
+    }
 }
 

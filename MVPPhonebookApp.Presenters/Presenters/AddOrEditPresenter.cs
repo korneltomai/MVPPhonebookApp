@@ -19,22 +19,6 @@ namespace MVPPhonebookApp.Presenters.Presenters
 
         private void Submit(object? sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(_view.EntryName) || string.IsNullOrWhiteSpace(_view.EntryPhoneNumber))
-            {
-                _view.ShowError("Name and phone number cannot be empty.");
-                return;
-            }
-            if (_view.EntryName.Length > 32)
-            {
-                _view.ShowError("Name cannot exceed 32 characters.");
-                return;
-            }
-            if (_view.EntryPhoneNumber.Length > 16)
-            {
-                _view.ShowError("Phone number cannot exceed 16 characters.");
-                return;
-            }
-
             var newEntry = new PhonebookEntry(_view.EntryName, _view.EntryPhoneNumber);
 
             try
